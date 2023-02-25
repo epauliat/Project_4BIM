@@ -1,8 +1,8 @@
 import os
 import tensorflow as tf
+import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
-
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -52,11 +52,26 @@ def Image_Conversion_to_array(path):
     print(image_array)
     return image_array
 
+def Image_Normalisation(image_array):
+    """Function that normalise an image
+    Args:
+        image_array (numpy.ndarray): the image path from the working directory
+    Returns:
+        numpy.ndarray: image_array
+    """
+    #normalization_layer=tf.keras.layers.Normalization()
+    image_array=image_array.astype('float32')/255.0-0.5 #normalising
+    # print(image_array.max(), image_array.min())
+    # print(image_array.mean(), image_array.std())
+    plt.imshow(np.clip(image_array + 0.5, 0, 1))
+    plt.show()
+    return image_array
+
 
 if __name__ == "__main__":
     # Dataset_Visualisation()
-    Image_Conversion_to_array("faces/Aaron_Guiel/Aaron_Guiel_0001.jpg")
-
+    array=Image_Conversion_to_array("faces/Aaron_Guiel/Aaron_Guiel_0001.jpg")
+    array_normalised=Image_Normalisation(array)
 
 # def encoder():
 
