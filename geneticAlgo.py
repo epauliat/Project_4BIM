@@ -24,6 +24,27 @@ def generate_array(size, max = 100, min = 0):
     return np.array(array_)
 
 
+def cost_function(array_, target):
+    """Function that computes the distance between an array and a specified target array
+    Args:
+        array_ (numpy.ndarray): array
+        array_ (numpy.ndarray): array
+    Returns:
+        int: cost
+    """
+    cost = 0
+    for i in array:
+        cost += (array_[i] - target[i])**2
+    return cost
+
+
+
+
+
+def select_Arrays(P, Ns):
+
+
+
 #############################
 ######### Main/Test #########
 #############################
