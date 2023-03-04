@@ -5,8 +5,10 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
 
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D, AveragePooling2D, Flatten
 from tensorflow.keras.models import Sequential
+from tensorflow.keras import activations
+from keras_preprocessing.image import img_to_array
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -50,8 +52,8 @@ def Image_Conversion_to_array(path):
         numpy.ndarray: image_array
     """
 
-    image_pil=tf.keras.utils.load_img(path)
-    image_array=tf.keras.utils.img_to_array(image_pil)
+    image_pil=tf.keras.preprocessing.image.load_img(path)
+    image_array=img_to_array(image_pil)
     print("array\n")
     print(image_array)
     return image_array
@@ -79,7 +81,7 @@ def model_sequential(image_array):
         numpy.ndarray: image_array
     """
     model=Sequential() #stack of layers
-    model.add(Conv2D(64,(3,3)), activation="relu", padding='same', input_shape=(256,256,3))
+    model.add(Conv2D(64,(3,3), activation="relu", padding='same'), input_shape=(256,256,3))
     model.add(MaxPooling2D((2,2), padding='same'))
     model.add(Conv2D(32,(3,3)), activation="relu", padding='same')
     model.add(MaxPooling2D((2,2), padding='same'))
@@ -101,12 +103,32 @@ def model_sequential(image_array):
     pred=model.predict(image_array)
     plt.imshow(pred[0].reshape(256,256,3))
 
+def test_CNN(image_array):
+
+    modelLeNet0 = Sequential([
+      Conv2D(filters=6, kernel_size=(3, 3),  activation=activations.relu),
+      AveragePooling2D(),
+      Conv2D(filters=16, kernel_size=(3, 3),activation='relu'),
+      AveragePooling2D(), Flatten(),
+      Dense(units=120, activation=activations.relu),
+      Dense(units=84, activation=activations.relu),
+      Dense(units=10, activation =activations.softmax)
+      ])
+
+    modelLeNet0.build(input_shape=(1,250,250,3))
+    # keras uses channels_last so input_shape = (batch_size = nb of images, imageside1, imageside2, channels = 3 for RGB and 1 for grey scale)
+    modelLeNet0.compile(optimizer="adam",loss="mean_square_error",metrics=['accuracy'])
+    modelLeNet0.summary()
+    return modelLeNet0.fit(image_array,image_array, epochs=10, shuffle=True)
+
 if __name__ == "__main__":
     # Dataset_Visualisation()
     array = Image_Conversion_to_array("faces/Aaron_Guiel/Aaron_Guiel_0001.jpg")
     array_normalised = Image_Normalisation(array)
-    model_sequential(array_normalised)
+    #model_sequential(array_normalised)
+    print(type(array_normalised), " of shape ", array_normalised.shape)
 
+    test_CNN(array_normalised)
 
 
 
