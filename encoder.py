@@ -1,12 +1,14 @@
 import os
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
 
 from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D
 from tensorflow.keras.models import Sequential
+from keras_preprocessing.image import img_to_array
+
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -50,8 +52,8 @@ def Image_Conversion_to_array(path):
         numpy.ndarray: image_array
     """
 
-    image_pil=tf.keras.utils.load_img(path)
-    image_array=tf.keras.utils.img_to_array(image_pil)
+    image_pil=tf.keras.preprocessing.image.load_img(path)
+    image_array=img_to_array(image_pil)
     print("array\n")
     print(image_array)
     return image_array
