@@ -1,12 +1,12 @@
 import os
 import tensorflow as tf
 import numpy as np
-import Conv2D
+
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
 
-from keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D
-from keras.model import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D
+from tensorflow.keras.models import Sequential
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -72,7 +72,7 @@ def Image_Normalisation(image_array):
     return image_array
 
 def model_sequential(image_array):
-    """Function that normalise an image
+    """Function that normalises an image
     Args:
         image_array (numpy.ndarray): the image path from the working directory
     Returns:
@@ -103,9 +103,12 @@ def model_sequential(image_array):
 
 if __name__ == "__main__":
     # Dataset_Visualisation()
-    array=Image_Conversion_to_array("faces/Aaron_Guiel/Aaron_Guiel_0001.jpg")
-    array_normalised=Image_Normalisation(array)
+    array = Image_Conversion_to_array("faces/Aaron_Guiel/Aaron_Guiel_0001.jpg")
+    array_normalised = Image_Normalisation(array)
     model_sequential(array_normalised)
+
+
+
 
 # def encoder():
 
