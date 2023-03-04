@@ -1,12 +1,11 @@
 import os
 import tensorflow as tf
 import numpy as np
-import Conv2D
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
 
-from keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D
-from keras.model import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D
+from tensorflow.keras.models import Sequential
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
