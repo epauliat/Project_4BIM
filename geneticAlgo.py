@@ -198,3 +198,5 @@ print(means)
 plt.figure()
 plt.plot(np.array(means))
 plt.show()
+
+#modif
