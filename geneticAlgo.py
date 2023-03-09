@@ -115,27 +115,40 @@ def crossing_over(arrayList_, P):
 
 import random
 
-def multi_point_crossover(points, *parents):
-    """_summary_ cette fonction créé un vecteur enfant en choisissant de manière aléatoire un parent pour chaque position de chaque segment entre les points de coupure
+def coupures(size, N):
+    """Computes indexes of the cuts to be performed for the crossing-over
+    Args:
+        size (int): Length of the arrays
+        N (int): Number of fragments
+    Returns:
+        numpy.ndarray: points
+    """
+    div = size/N
+    points = [int(k*div) for k in range(1,N)]
+    return points
+
+
+def multi_point_crossover(parents):
+    """Cette fonction créé une liste de vecteurs enfants en recombinant les parents avec les différents points de coupure
 
     Args:
-        points (_type_): liste de points de coupure (créer des segments de vecteur)
-        *parents : liste des vecteurs après mutation (entre 2 et 5 vecteurs environ)
+        parents : liste des vecteurs après mutation
     Returns:
-        _type_: un vecteur enfant de la même taille que ceux des parents
+        childs: un vecteur enfant de la même taille que ceux des parents
     """
-    n = len(parents)
-    child = []
-    parent_index = 0
+    n = len(parents[0])
+    points = coupures(n, 5)
     for i in range(len(points)):
         start = points[i]
-        end = points[i+1] if i+1 < len(points) else len(parents[0]) #on définir les segments en partant d'un point de coupure au suivant
-        for j in range(start, end): #on parcout chaque segment
-            child.append(parents[parent_index][j]) #on ajoute l'élément du segment un par un
-            parent_index = (parent_index + 1) % n #la probabilité de choisir un parent est de 1/n
-    return child
+        childs = np.copy(parents)
+        for i in range(len(parents)):
+            childs[i][start:] = parents[i+1][start:] if i+1<len(parents) else parents[0][start:]
+        parents = childs
+    return childs
 
-    #ou crossover qui créée un vecteur qui, pour chaque position d'entier choisit aléatoirement un parent (mais trop de mélange ??)
+
+
+
 
 def newGeneration(population_, target, select = .5):
     """Generates a new population by performing mutations on
@@ -160,7 +173,6 @@ def newGeneration(population_, target, select = .5):
 
     return newPopulation_
 
-
 #############################
 ######### Main/Test #########
 #############################
@@ -169,7 +181,7 @@ N = 15
 size = 15
 min = 0
 max = 100
-
+'''
 Arr = generate_array(size, max, min)
 print(Arr)
 print()
@@ -222,4 +234,17 @@ plt.figure()
 plt.plot(np.array(means))
 plt.show()
 
+'''
 
+A = [f"A{i}" for i in range(10)]
+B = [f"B{i}" for i in range(10)]
+C = [f"C{i}" for i in range(10)]
+D = [f"D{i}" for i in range(10)]
+E = [f"E{i}" for i in range(10)]
+
+for i in [A,B,C,D,E]:
+    print(i)
+
+child = multi_point_crossover([A,B,C,D,E])
+for i in child:
+    print(i)
