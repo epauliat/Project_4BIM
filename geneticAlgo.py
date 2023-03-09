@@ -129,7 +129,7 @@ def mutants_complets(vect_select,mutants_select):
             new_mutant=array_mutation(vect_select[i]) 
             #newcompleteArray_.append(new_mutant)           
             #t_2 = np.vstack([t_2,ajout_ligne_t_2])
-            newcompleteArray_=np.append([newcompleteArray_], [new_mutant])
+            newcompleteArray_=np.append(newcompleteArray_, [new_mutant], axis=1)
 
     elif S==5:
         newcompleteArray_= np.copy(mutants_select)
