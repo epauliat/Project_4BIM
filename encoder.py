@@ -1,14 +1,14 @@
 import os
-import tensorflow as tf
+from PIL import Image
 import numpy as np
-
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
 
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, UpSampling2D, AveragePooling2D, Flatten
-from tensorflow.keras.models import Sequential
-from tensorflow.keras import activations
 from keras_preprocessing.image import img_to_array
+
+import torch
+import torch.nn as nn
+from torchvision import transforms
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -44,98 +44,175 @@ def Image_Visualisation(path):
     plt.imshow(image)
     plt.show()
 
-def Image_Conversion_to_array(path):
+def Data_import():
+    """Function that imports all the images in the file faces, and put them in a list
+    Args:
+     None
+    Returns:
+     list: array of all the image as tensors
+
+    """
+
+    files = os.listdir('faces')
+    data=[]
+    for name in files:
+        picture = os.listdir('faces/'+name)
+        for p in picture:
+            data.append(Image_Conversion_to_tensor("faces/"+name+"/"+p))
+    return data
+
+def Image_Conversion_to_tensor(path):
     """Function that converts an image to an array, using a PIL format
     Args:
         path (str): the image path from the working directory
     Returns:
-        numpy.ndarray: image_array
+        tensor: the image tensor correspinding to the path
     """
 
-    image_pil=tf.keras.preprocessing.image.load_img(path)
-    image_array=img_to_array(image_pil)
-    print("array\n")
-    print(image_array)
-    return image_array
+    image_pil=Image.open(path)
+    transformation=transforms.ToTensor()
+    image_tensor=transformation(image_pil)
+    return image_tensor
 
-def Image_Normalisation(image_array):
-    """Function that normalise an image
+class Autoencoder(nn.Module):
+    def __init__(self):
+        """Autoencoder Constructor
+        """
+        super().__init__()
+        # N, 1, 28, 28
+        self.encoder = nn.Sequential(
+            nn.Conv2d(3, 16, 3, stride=1, padding=0), # -> N, 16, 14, 14
+            nn.ReLU(),
+            nn.Conv2d(16, 32, 3, stride=1, padding=0), # -> N, 32, 7, 7
+            nn.ReLU(),
+            nn.Conv2d(32, 64, 7), # -> N, 64, 1, 1
+            nn.Flatten()
+
+        )
+
+        # N , 64, 1, 1
+        self.decoder = nn.Sequential(
+            nn.Unflatten(1,[64,240,240]),
+            nn.ConvTranspose2d(64, 32, 7), # -> N, 32, 7, 7
+            nn.ReLU(),
+            nn.ConvTranspose2d(32, 16, 3, stride=1, padding=0, output_padding=0), # N, 16, 14, 14 (N,16,13,13 without output_padding)
+            nn.ReLU(),
+            nn.ConvTranspose2d(16, 3, 3, stride=1, padding=0, output_padding=0), # N, 1, 28, 28  (N,1,27,27)
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        """Function that encodes an an image tensor, then decodes it
+        Args:
+            x (tensor): the  original image tensor
+        Returns:
+            tensor: the image tensor after being decoded
+        """
+        encoded = self.encoder(x)
+        print(encoded)
+        print(encoded.size())
+        decoded = self.decoder(encoded)
+        return decoded
+
+def train(data, autoencoder):
+    """Function that train an autoencoder with a given dataset
     Args:
-        image_array (numpy.ndarray): the image path from the working directory
+        data (list): the  list of image tensors
     Returns:
-        numpy.ndarray: image_array
+        None
     """
-    #normalization_layer=tf.keras.layers.Normalization()
-    image_array=image_array.astype('float32')/255.0-0.5 #normalising
-    # print(image_array.max(), image_array.min())
-    # print(image_array.mean(), image_array.std())
-    plt.imshow(np.clip(image_array + 0.5, 0, 1))
+    criterion = nn.MSELoss()
+    optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
+    num_epochs = 2
+    outputs = []
+    i=0
+    for epoch in range(num_epochs):
+        for img in data:
+            img = img.reshape(1, 3, 250, 250) # -> use for Autoencoder_Linear
+            print(i)
+            i+=1
+            recon = autoencoder(img)
+            loss = criterion(recon, img)
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+        i=0
+        print(f'Epoch:{epoch+1}, Loss:{loss.item():.4f}')
+        outputs.append((epoch, img, recon))
+
+def save(autoencoder, path):
+    """Function that saves an autoencoder to a file
+    Args:
+        autoencoder (Autoencoder): the model that we want to save
+    Returns:
+        None
+    """
+    torch.save(autoencoder.state_dict(), path)
+
+def load(path):
+    """Function that loads an autoencoder from a file
+    Args:
+        path (str): the path we want to load from
+    Returns:
+        autoencoder (Autoencoder): the loaded autoencoder
+    """
+    autoencoder = Autoencoder()
+    autoencoder.load_state_dict(torch.load("autoencoder_fitted.pt"))
+    autoencoder.eval()
+    return autoencoder
+
+def creating_training_saving_autoencoder(path):
+    """Function that creates an autoencoder, trains it, and saves it to a file
+    Args:
+        None
+    Returns:
+        autoencoder (Autoencoder): the created autoencoder
+    """
+    data=Data_import()
+    my_autoencoder=Autoencoder()
+    train(data, my_autoencoder)
+    save(my_autoencoder, path)
+    return my_autoencoder
+
+def loading_autoencoder():
+    """Function that load an autoencoder
+    Args:
+        None
+    Returns:
+        autoencoder (Autoencoder): the created autoencoder
+    """
+    loaded_autoencopder=load("autoencoder_fitted.pt")
+    return loaded_autoencopder
+
+def comparing_images(autoencoder, path_to_image):
+    """Function that shows 2 images: one originale and one that has been
+    been coded and decoded by an autoencoder
+    Args:
+        autoencoder (Autoencoder): the autoencoder used
+        path (str): the path we want to load the image from
+    Returns:
+        None
+    """
+    image_tensor= Image_Conversion_to_tensor(path_to_image)
+    X=image_tensor.reshape(1,3,250,250)
+    decoded_tensor=autoencoder.forward(X)
+    decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,250,250))
+
+    fig = plt.figure(figsize=(50,50))
+    fig.add_subplot(1, 2, 1)
+    plt.imshow(decoded_pil)
+    fig.add_subplot(1, 2, 2)
+    plt.imshow(mpimg.imread(path_to_image))
     plt.show()
-    return image_array
 
-def model_sequential(image_array):
-    """Function that normalises an image
-    Args:
-        image_array (numpy.ndarray): the image path from the working directory
-    Returns:
-        numpy.ndarray: image_array
-    """
-    model=Sequential() #stack of layers
-    model.add(Conv2D(64,(3,3), activation="relu", padding='same'), input_shape=(256,256,3))
-    model.add(MaxPooling2D((2,2), padding='same'))
-    model.add(Conv2D(32,(3,3)), activation="relu", padding='same')
-    model.add(MaxPooling2D((2,2), padding='same'))
-    model.add(Conv2D(16,(3,3)), activation="relu", padding='same')
-    model.add(MaxPooling2D((2,2), padding='same'))
-
-    model.add(Conv2D(16,(3,3)), activation="relu", padding='same')
-    model.add(UpSampling2D((2,2)))
-    model.add(Conv2D(32,(3,3)), activation="relu", padding='same')
-    model.add(UpSampling2D((2,2)))
-    model.add(Conv2D(64,(3,3)), activation="relu", padding='same')
-    model.add(UpSampling2D((2,2)))
-    model.add(Conv2D(3,(3,3)), activation="relu", padding='same')
-
-    model.compile(optimizer="adam",loss="mean_square_error",metrics=['accuracy'])
-    model.summary()
-    model.fit(image_array,image_array, epochs=10, shuffle=True)
-
-    pred=model.predict(image_array)
-    plt.imshow(pred[0].reshape(256,256,3))
-
-def test_CNN(image_array):
-
-    modelLeNet0 = Sequential([
-      Conv2D(filters=6, kernel_size=(3, 3),  activation=activations.relu),
-      AveragePooling2D(),
-      Conv2D(filters=16, kernel_size=(3, 3),activation='relu'),
-      AveragePooling2D(), Flatten(),
-      Dense(units=120, activation=activations.relu),
-      Dense(units=84, activation=activations.relu),
-      Dense(units=10, activation =activations.softmax)
-      ])
-
-    modelLeNet0.build(input_shape=(1,250,250,3))
-    # keras uses channels_last so input_shape = (batch_size = nb of images, imageside1, imageside2, channels = 3 for RGB and 1 for grey scale)
-    modelLeNet0.compile(optimizer="adam",loss="mean_square_error",metrics=['accuracy'])
-    modelLeNet0.summary()
-    return modelLeNet0.fit(image_array,image_array, epochs=10, shuffle=True)
 
 if __name__ == "__main__":
-    # Dataset_Visualisation()
-    array = Image_Conversion_to_array("faces/Aaron_Guiel/Aaron_Guiel_0001.jpg")
-    array_normalised = Image_Normalisation(array)
-    #model_sequential(array_normalised)
-    print(type(array_normalised), " of shape ", array_normalised.shape)
+    # my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted.pt")
+    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
-    test_CNN(array_normalised)
+    my_autoencoder_loaded=loading_autoencoder()
+    comparing_images(my_autoencoder_loaded,"faces/Azra_Akin/Azra_Akin_0001.jpg")
+    comparing_images(my_autoencoder,"faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
 
-
-
-# def encoder():
-
-
-# class encoder:
-#
-#    def __init__(self, images):
-#         self.images
+    # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
