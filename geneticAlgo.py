@@ -156,10 +156,6 @@ def crossing_over(arrayList_, P):
 
 import random
 
-<<<<<<< HEAD
-def multi_point_crossover(points, parents):
-    """_summary_ cette fonction créé un vecteur enfant en choisissant de manière aléatoire un parent pour chaque position de chaque segment entre les points de coupure
-=======
 def coupures(size, N):
     """Computes indexes of the cuts to be performed for the crossing-over
     Args:
@@ -172,10 +168,8 @@ def coupures(size, N):
     points = [int(k*div) for k in range(1,N)]
     return points
 
-
-def multi_point_crossover(parents):
-    """Cette fonction créé une liste de vecteurs enfants en recombinant les parents avec les différents points de coupure
->>>>>>> 173bd0c5733bd69306b10e96737aa1284e20cf35
+def multi_point_crossover(points, parents):
+    """_summary_ cette fonction créé un vecteur enfant en choisissant de manière aléatoire un parent pour chaque position de chaque segment entre les points de coupure
 
     Args:
         parents : liste des vecteurs après mutation
@@ -186,23 +180,11 @@ def multi_point_crossover(parents):
     points = coupures(n, 5)
     for i in range(len(points)):
         start = points[i]
-<<<<<<< HEAD
-        end = points[i+1] if i+1 < len(points) else len(parents[0]) #on définir les segments en partant d'un point de coupure au suivant
-        #si on arrive au dernier point de coupure on prend le parent[0]
-        for j in range(start, end): #on parcout chaque segment
-            child.append(parents[parent_index][j]) #on ajoute l'élément du segment un par un
-            parent_index = (parent_index + 1) % n #la probabilité de choisir un parent est de 1/n
-    return child
-=======
         childs = np.copy(parents)
         for i in range(len(parents)):
             childs[i][start:] = parents[i+1][start:] if i+1<len(parents) else parents[0][start:]
         parents = childs
     return childs
-
-
-
->>>>>>> 173bd0c5733bd69306b10e96737aa1284e20cf35
 
 
 def newGeneration(population_, target, select = .5):
@@ -236,7 +218,7 @@ N = 15
 size = 15
 min = 0
 max = 100
-'''
+
 Arr = generate_array(size, max, min)
 print(Arr)
 print()
@@ -315,3 +297,4 @@ for i in [A,B,C,D,E]:
 child = multi_point_crossover([A,B,C,D,E])
 for i in child:
     print(i)
+'''
