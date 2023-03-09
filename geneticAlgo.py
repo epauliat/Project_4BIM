@@ -113,6 +113,29 @@ def crossing_over(arrayList_, P):
 
     return newArrayList_
 
+import random
+
+def multi_point_crossover(points, *parents):
+    """_summary_ cette fonction créé un vecteur enfant en choisissant de manière aléatoire un parent pour chaque position de chaque segment entre les points de coupure
+
+    Args:
+        points (_type_): liste de points de coupure (créer des segments de vecteur)
+        *parents : liste des vecteurs après mutation (entre 2 et 5 vecteurs environ)
+    Returns:
+        _type_: un vecteur enfant de la même taille que ceux des parents
+    """
+    n = len(parents)
+    child = []
+    parent_index = 0
+    for i in range(len(points)):
+        start = points[i]
+        end = points[i+1] if i+1 < len(points) else len(parents[0]) #on définir les segments en partant d'un point de coupure au suivant
+        for j in range(start, end): #on parcout chaque segment
+            child.append(parents[parent_index][j]) #on ajoute l'élément du segment un par un
+            parent_index = (parent_index + 1) % n #la probabilité de choisir un parent est de 1/n
+    return child
+
+    #ou crossover qui créée un vecteur qui, pour chaque position d'entier choisit aléatoirement un parent (mais trop de mélange ??)
 
 def newGeneration(population_, target, select = .5):
     """Generates a new population by performing mutations on
@@ -199,4 +222,4 @@ plt.figure()
 plt.plot(np.array(means))
 plt.show()
 
-#modif
+
