@@ -82,19 +82,60 @@ def select_Arrays(arrayList, target, p = 0.5):
 
     return orderedArrays[:int(len(arrayList)*p)]
 
-def array_mutation(array_, P):
+def array_mutation(array_):
     """Function that mutates an array randomly
     Args:
         array_ (numpy.ndarray): The array to be mutated
-        P (float): Mutation factor
     Returns:
         numpy.ndarray: newArray_
     """
     S = len(array_)
     newArray_ = np.copy(array_)
     for i in range(S):
-        newArray_[i] = array_[i] + np.random.randint(-2, 3)
+        newArray_[i] = np.asarray(array_[i]) + np.random.randint(-2, 3)
     return newArray_
+
+def liste_mutants_select(vect_select):
+    """renvoie la liste de tous les vecteurs mutés à partir des vecteurs séléctionnés
+    Args:
+        vect_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur dans un array (un array d'array)
+    return 
+        mutants_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur mutés, dans un array (un array d'array)
+    """
+    mutants_select=np.copy(vect_select)
+
+    for i in range(len(vect_select)-1): #pour chaque vecteur de mon array
+        mutants_select[i]=array_mutation(vect_select[i])
+       
+    return mutants_select
+
+def mutants_complets(vect_select,mutants_select):
+    """calcule le nb mutants manquants s'il y en a et complète la liste avec d'autres mutants (on veut la taille de la liste de mutants=taille de la liste des crossover) 
+        hypothèse : l'utilisateur ne peut pas sélectionner plus de la moitié des images proposées
+    Args:
+        vect_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur dans un array
+        mutants_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur déjà mutés dans un array
+    Returns:
+        numpy.ndarray: newcompleteArray_ : tous les vecteurs mutés, dans un array de 5
+    """
+    S=len(mutants_select)
+    #s'il y a 10 vecteurs (images affichées à l'écran) on veut 5 mutants (et 5 modif en crossingover)
+    newcompleteArray_= np.copy(mutants_select) #on copie les vecteurs déjà mutés
+    #définir newmutant qui sera un nouveau vecteur muté
+    new_mutant = np.array([]) #non mutant c'est un vecteur vec_select un vect de vect
+    if S<5 :
+        nb_mut_manquants=5-S #10=len(vect_select) = taille de la liste des vecteurs affichés
+        for i in range (nb_mut_manquants-1):
+            new_mutant=array_mutation(vect_select[i]) 
+            #newcompleteArray_.append(new_mutant)           
+            #t_2 = np.vstack([t_2,ajout_ligne_t_2])
+            newcompleteArray_=np.append([newcompleteArray_], [new_mutant])
+
+    elif S==5:
+        newcompleteArray_= np.copy(mutants_select)
+    
+    return newcompleteArray_
+             
 
 
 def crossing_over(arrayList_, P):
@@ -115,7 +156,7 @@ def crossing_over(arrayList_, P):
 
 import random
 
-def multi_point_crossover(points, *parents):
+def multi_point_crossover(points, parents):
     """_summary_ cette fonction créé un vecteur enfant en choisissant de manière aléatoire un parent pour chaque position de chaque segment entre les points de coupure
 
     Args:
@@ -130,6 +171,7 @@ def multi_point_crossover(points, *parents):
     for i in range(len(points)):
         start = points[i]
         end = points[i+1] if i+1 < len(points) else len(parents[0]) #on définir les segments en partant d'un point de coupure au suivant
+        #si on arrive au dernier point de coupure on prend le parent[0]
         for j in range(start, end): #on parcout chaque segment
             child.append(parents[parent_index][j]) #on ajoute l'élément du segment un par un
             parent_index = (parent_index + 1) % n #la probabilité de choisir un parent est de 1/n
@@ -164,7 +206,7 @@ def newGeneration(population_, target, select = .5):
 #############################
 ######### Main/Test #########
 #############################
-
+'''
 N = 15
 size = 15
 min = 0
@@ -221,5 +263,17 @@ print(means)
 plt.figure()
 plt.plot(np.array(means))
 plt.show()
+'''
+
+A=[11,12,13,14,15,16]
+B=[21,22,23,24,25,26]
+C=[31,32,33,34,35,36]
+
+
+#mutants_complets(vect_select,mutants_select):
+#liste_mutants_select(vect_select):
+#print(liste_mutants_select([A,B,C]))
+
+print(mutants_complets([A,B,C], liste_mutants_select([A,B,C])))
 
 
