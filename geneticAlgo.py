@@ -248,3 +248,14 @@ for i in [A,B,C,D,E]:
 child = multi_point_crossover([A,B,C,D,E])
 for i in child:
     print(i)
+
+
+print("######################")
+
+A = np.array([[1,2,3]])
+B = np.array([[4,5,6]])
+C = np.array([[4,5,6]])
+
+A = np.append(A, B, C)
+
+print(A)
