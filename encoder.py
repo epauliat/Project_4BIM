@@ -82,36 +82,31 @@ class Autoencoder(nn.Module):
         """Autoencoder Constructor
         """
         super().__init__()
-        # N, 1, 28, 28
-        self.encoder = nn.Sequential(
+        # N, 1, 64, 64
+        self.encoder_Conv2d_ReLU_1 = nn.Sequential(
             nn.Conv2d(3, 16, 3, stride=1, padding=0),
-
-            nn.ReLU(),
-            nn.Conv2d(16, 20, 3, stride=1, padding=0), # -> N, 32, 7, 7
-            # nn.BatchNorm2d(32),
-            nn.ReLU(),
-            nn.Conv2d(20, 26, 3), #(1,64,240,240)
-            # nn.BatchNorm2d(64),
-            #nn.Flatten()
+            nn.ReLU()
         )
+        self.encoder_Conv2d_ReLU_2 = nn.Sequential(
+            nn.Conv2d(16, 16, 3, stride=1, padding=0),
+            nn.ReLU()
+        )
+        self.encoder_MaxPool2d = nn.MaxPool2d(3, return_indices=True)
+        self.encoder_Flatten = nn.Flatten()
+        self.encoder_Linear = nn.Linear(5776,100)
 
-        self.encode_max = nn.MaxPool2d(3, return_indices=True)
-        self.flatten1 = nn.Flatten()
-        self.linear1 = nn.Linear(9386,100)
+        self.BatchNormalization = nn.BatchNorm2d(16)
 
-        self.linear2 = nn.Linear(100,9386)
-        self.flatten2 = nn.Unflatten(1,[26,19,19])
-        self.decode_unpool = nn.MaxUnpool2d(3)
-
-
-        self.decoder = nn.Sequential(
-            #nn.Unflatten(1,[26,58,58]),
-            nn.ConvTranspose2d(26, 20, 3), # -> N, 32, 7, 7
-            nn.ReLU(),
-            nn.ConvTranspose2d(20, 16, 3, stride=1, padding=0, output_padding=0), # N, 16, 14, 14 (N,16,13,13 without output_padding)
-            nn.ReLU(),
-            nn.ConvTranspose2d(16, 3, 3, stride=1, padding=0, output_padding=0), # N, 1, 28, 28  (N,1,27,27)
-            nn.Sigmoid(),
+        self.decoder_Linear = nn.Linear(100,5776)
+        self.decoder_Unflatten = nn.Unflatten(1,[16,19,19])
+        self.decoder_MaxUnpool2d = nn.MaxUnpool2d(3)
+        self.decoder_ReLu_ConvTranspose2d_2 = nn.Sequential(
+            nn.ConvTranspose2d(16, 16, 3, stride=1, padding=0, output_padding=0),
+            nn.ReLU()
+        )
+        self.decoder_ReLu_ConvTranspose2d_1 = nn.Sequential(
+            nn.ConvTranspose2d(16, 3, 3, stride=1, padding=0, output_padding=0),
+            nn.Sigmoid()
         )
 
     def forward(self, x):
@@ -121,22 +116,26 @@ class Autoencoder(nn.Module):
         Returns:
             tensor: the image tensor after being decoded
         """
-        encoded = self.encoder(x)
+        encoded = self.encoder_Conv2d_ReLU_1(x)
+        encoded = self.encoder_Conv2d_ReLU_2(encoded)
+        encoded = self.BatchNormalization(encoded)
+        encoded = self.encoder_Conv2d_ReLU_2(encoded)
         # print(encoded.size())
-        encoded_pooling, indices = self.encode_max(encoded)
+        encoded_pooling, indices = self.encoder_MaxPool2d(encoded)
         # print(encoded_pooling.size())
-        encoded_flatten = self.flatten1(encoded_pooling)
-        encoded_Linear = self.linear1(encoded_flatten)
+        encoded_flatten = self.encoder_Flatten(encoded_pooling)
+        encoded_Linear = self.encoder_Linear(encoded_flatten)
         # print(encoded_Linear.size())
 
-
-
-        decoded_Unlinear = self.linear2(encoded_Linear)
+        decoded_Unlinear = self.decoder_Linear(encoded_Linear)
         # print(decoded_Unlinear.size())
-        decoded_unflatten = self.flatten2(decoded_Unlinear)
-        decoded_unpooling = self.decode_unpool(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
+        decoded_unflatten = self.decoder_Unflatten(decoded_Unlinear)
+        decoded_unpooling = self.decoder_MaxUnpool2d(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
 
-        decoded = self.decoder(decoded_unpooling)
+        decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded_unpooling)
+        decoded = self.BatchNormalization(decoded)
+        decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
+        decoded = self.decoder_ReLu_ConvTranspose2d_1(decoded)
 
         return decoded
 
