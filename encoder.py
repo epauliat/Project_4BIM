@@ -92,13 +92,20 @@ class Autoencoder(nn.Module):
             nn.ReLU(),
             nn.Conv2d(20, 26, 3), #(1,64,240,240)
             # nn.BatchNorm2d(64),
-            nn.Flatten(),
-            nn.Linear(87464,100)
+            #nn.Flatten()
         )
 
+        self.encode_max = nn.MaxPool2d(3, return_indices=True)
+        self.flatten1 = nn.Flatten()
+        self.linear1 = nn.Linear(9386,100)
+
+        self.linear2 = nn.Linear(100,9386)
+        self.flatten2 = nn.Unflatten(1,[26,19,19])
+        self.decode_unpool = nn.MaxUnpool2d(3)
+
+
         self.decoder = nn.Sequential(
-            nn.Linear(100,87464),
-            nn.Unflatten(1,[26,58,58]),
+            #nn.Unflatten(1,[26,58,58]),
             nn.ConvTranspose2d(26, 20, 3), # -> N, 32, 7, 7
             nn.ReLU(),
             nn.ConvTranspose2d(20, 16, 3, stride=1, padding=0, output_padding=0), # N, 16, 14, 14 (N,16,13,13 without output_padding)
@@ -115,11 +122,24 @@ class Autoencoder(nn.Module):
             tensor: the image tensor after being decoded
         """
         encoded = self.encoder(x)
-        print(encoded.size())
+        # print(encoded.size())
+        encoded_pooling, indices = self.encode_max(encoded)
+        # print(encoded_pooling.size())
+        encoded_flatten = self.flatten1(encoded_pooling)
+        encoded_Linear = self.linear1(encoded_flatten)
+        # print(encoded_Linear.size())
 
-        decoded = self.decoder(encoded)
+
+
+        decoded_Unlinear = self.linear2(encoded_Linear)
+        # print(decoded_Unlinear.size())
+        decoded_unflatten = self.flatten2(decoded_Unlinear)
+        decoded_unpooling = self.decode_unpool(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
+
+        decoded = self.decoder(decoded_unpooling)
 
         return decoded
+
 
 def train(data, autoencoder):
     """Function that train an autoencoder with a given dataset
@@ -130,7 +150,7 @@ def train(data, autoencoder):
     """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
-    num_epochs = 1
+    num_epochs = 10
     outputs = []
     i=0
     for epoch in range(num_epochs):
