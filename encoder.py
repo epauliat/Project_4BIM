@@ -4,6 +4,7 @@ from PIL import Image
 import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
+from torchsummary import summary
 
 from keras_preprocessing.image import img_to_array
 
@@ -71,8 +72,9 @@ def Image_Conversion_to_tensor(path):
     """
 
     image_pil=Image.open(path)
+    image_pil_resized=image_pil.resize((64,64))
     transformation=transforms.ToTensor()
-    image_tensor=transformation(image_pil)
+    image_tensor=transformation(image_pil_resized)
     return image_tensor
 
 class Autoencoder(nn.Module):
@@ -82,24 +84,24 @@ class Autoencoder(nn.Module):
         super().__init__()
         # N, 1, 28, 28
         self.encoder = nn.Sequential(
-            nn.Conv2d(3, 16, 3, stride=1, padding=0), # -> N, 16, 14, 14
+            nn.Conv2d(3, 16, 3, stride=1, padding=0),
+
             nn.ReLU(),
-            nn.Conv2d(16, 32, 3, stride=1, padding=0), # -> N, 32, 7, 7
+            nn.Conv2d(16, 20, 3, stride=1, padding=0), # -> N, 32, 7, 7
+            # nn.BatchNorm2d(32),
             nn.ReLU(),
-            nn.Conv2d(32, 64, 7), # -> N, 64, 1, 1
+            nn.Conv2d(20, 26, 3), #(1,64,240,240)
+            # nn.BatchNorm2d(64),
             nn.Flatten(),
-            nn.Linear(3686400,20)
-
-
+            nn.Linear(87464,100)
         )
 
-        # N , 64, 1, 1
         self.decoder = nn.Sequential(
-            nn.Linear(20,3686400),
-            nn.Unflatten(1,[64,240,240]),
-            nn.ConvTranspose2d(64, 32, 7), # -> N, 32, 7, 7
+            nn.Linear(100,87464),
+            nn.Unflatten(1,[26,58,58]),
+            nn.ConvTranspose2d(26, 20, 3), # -> N, 32, 7, 7
             nn.ReLU(),
-            nn.ConvTranspose2d(32, 16, 3, stride=1, padding=0, output_padding=0), # N, 16, 14, 14 (N,16,13,13 without output_padding)
+            nn.ConvTranspose2d(20, 16, 3, stride=1, padding=0, output_padding=0), # N, 16, 14, 14 (N,16,13,13 without output_padding)
             nn.ReLU(),
             nn.ConvTranspose2d(16, 3, 3, stride=1, padding=0, output_padding=0), # N, 1, 28, 28  (N,1,27,27)
             nn.Sigmoid(),
@@ -113,8 +115,10 @@ class Autoencoder(nn.Module):
             tensor: the image tensor after being decoded
         """
         encoded = self.encoder(x)
-        # print("here I am")
+        print(encoded.size())
+
         decoded = self.decoder(encoded)
+
         return decoded
 
 def train(data, autoencoder):
@@ -126,12 +130,12 @@ def train(data, autoencoder):
     """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
-    num_epochs = 30
+    num_epochs = 1
     outputs = []
     i=0
     for epoch in range(num_epochs):
         for img in data:
-            img = img.reshape(1, 3, 250, 250) # -> use for Autoencoder_Linear
+            img = img.reshape(1, 3, 64, 64) # -> use for Autoencoder_Linear
             print(str(i), end=',')
             sys.stdout.flush()
             i+=1
@@ -143,6 +147,7 @@ def train(data, autoencoder):
             loss.backward()
             optimizer.step()
         i=0
+
         print(f'______________Epoch:{epoch+1}, Loss:{loss.item():.4f}')
         outputs.append((epoch, img, recon))
 
@@ -202,9 +207,9 @@ def comparing_images(autoencoder, path_to_image):
         None
     """
     image_tensor= Image_Conversion_to_tensor(path_to_image)
-    X=image_tensor.reshape(1,3,250,250)
+    X=image_tensor.reshape(1,3,64,64)
     decoded_tensor=autoencoder.forward(X)
-    decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,250,250))
+    decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,64,64))
 
     fig = plt.figure(figsize=(50,50))
     fig.add_subplot(1, 2, 1)
@@ -215,11 +220,15 @@ def comparing_images(autoencoder, path_to_image):
 
 
 if __name__ == "__main__":
-    # my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_85faces_30epochs.pt")
-    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test.pt")
+    comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # summary(my_autoencoder)
 
-    my_autoencoder_loaded=loading_autoencoder("autoencoder_fitted_29faces_10epochs.pt")
-    comparing_images(my_autoencoder_loaded,"faces/Azra_Akin/Azra_Akin_0001.jpg")
-    comparing_images(my_autoencoder,"faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
+    # my_autoencoder_loaded=loading_autoencoder("autoencoder_fitted_29faces_10epochs.pt")
+    # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+
+    # my_autoencoder_loaded=loading_autoencoder("autoencoder_fitted_29faces_10epochs.pt")
+    # comparing_images(my_autoencoder_loaded,"faces/Azra_Akin/Azra_Akin_0001.jpg")
+    # comparing_images(my_autoencoder,"faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
 
     # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
