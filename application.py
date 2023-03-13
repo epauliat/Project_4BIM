@@ -87,24 +87,6 @@ class Application(Tk):
 
 		lancer = Button(w_frame, text="Lancer l'application",command=self.simulation)
 		lancer.grid(row=2,column=0)
-
-		#e = Entry(w_frame,width=50, borderwidth=5)
-		#e.grid(row=1,column=0,columnspan=2)
-
-	#def start(self):
-		"""Function that allows us to get the number of pictures that we will propose to the victim for each iteration
-		Args:
-			None
-		Return:
-			None
-		"""
-	#	self.nbr = IntVar()
-	#	self.nbr = int(e.get())
-	#	if (self.nbr<=1) or (self.nbr>15):
-	#		messagebox.showerror("Nombre d'image a selectionne incorrect","Veuillez rentrer un nombre entre 2 et 15 (compris)")
-	#		self.first_window()
-	#	else:
-	#		self.simulation()
 		
 
 	def simulation(self):
@@ -134,14 +116,13 @@ class Application(Tk):
 			self.button.append(im_b)
 		for i in range(len(self.button)):
 			self.button[i].configure(command=lambda button=self.button[i]: self.selected(button))
-			#if self.nbr<=5:
-			#	self.button[i].place(x=300+245*i,y=240)
-			#elif self.nbr<=10:
 			if i<5:
 				self.button[i].grid(row=1,column=i+1,sticky="nsew")
 			else:
 				j=i-5
 				self.button[i].grid(row=2,column=j+1,sticky="nsew")
+		self.font = "Arial"
+
 		self.bouton_flw = Button(self,text="Sélection terminée",font=("Arial",10),command=self.ia)
 		self.bouton_flw.grid(row=3,column=5,sticky="nsew")
 		self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=("Arial",10))
@@ -201,7 +182,7 @@ class Application(Tk):
 						self.inc+=1
 						self.all_slt.append(self.slt[0])
 						picture = self.slt[0].image
-						picture.save('images/selected/'+str(self.inc)+'.PNG')
+						picture.save('selected/'+str(self.inc)+'.PNG')
 						self.text = ScrolledText(self.selected_frame, wrap=WORD, width=30, height=45)
 						self.text.grid(row=2,column=0)
 						self.text.images=[]
