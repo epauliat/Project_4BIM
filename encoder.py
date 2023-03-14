@@ -54,7 +54,7 @@ def Data_import(path):
      list: array of all the image as tensors
 
     """
-    batchSize = 65
+    batchSize = 32
     dataset = datasets.ImageFolder(root=path, transform=transforms.Compose([transforms.Resize((64,64)),transforms.ToTensor()]))
     loader = torch.utils.data.DataLoader(dataset, batch_size = batchSize)
 
@@ -158,9 +158,9 @@ class Encoder(nn.Module):
             nn.Conv2d(16, 16, 3, stride=1, padding=0),
             nn.ReLU()
         )
-        self.encoder_MaxPool2d = nn.MaxPool2d(3, return_indices=True)
+        # self.encoder_MaxPool2d = nn.MaxPool2d(3, return_indices=True)
         self.encoder_Flatten = nn.Flatten()
-        self.encoder_Linear = nn.Linear(5776,100)
+        self.encoder_Linear = nn.Linear(53824,100)
 
         self.BatchNormalization = nn.BatchNorm2d(16)
 
@@ -177,10 +177,10 @@ class Encoder(nn.Module):
         encoded = self.encoder_Conv2d_ReLU_2(encoded)
         encoded = self.BatchNormalization(encoded)
         encoded = self.encoder_Conv2d_ReLU_2(encoded)
-        encoded_pooling, indices = self.encoder_MaxPool2d(encoded)
-        encoded_flatten = self.encoder_Flatten(encoded_pooling)
+        # encoded_pooling, indices = self.encoder_MaxPool2d(encoded)
+        encoded_flatten = self.encoder_Flatten(encoded)
         encoded_Linear = self.encoder_Linear(encoded_flatten)
-        return encoded_Linear, indices
+        return encoded_Linear #, indices
 
 class Decoder(nn.Module):
 
@@ -190,8 +190,8 @@ class Decoder(nn.Module):
         super().__init__()
         self.BatchNormalization = nn.BatchNorm2d(16)
 
-        self.decoder_Linear = nn.Linear(100,5776)
-        self.decoder_Unflatten = nn.Unflatten(1,[16,19,19])
+        self.decoder_Linear = nn.Linear(100,53824)
+        self.decoder_Unflatten = nn.Unflatten(1,[16,58,58])
         self.decoder_MaxUnpool2d = nn.MaxUnpool2d(3)
         self.decoder_ReLu_ConvTranspose2d_2 = nn.Sequential(
             nn.ConvTranspose2d(16, 16, 3, stride=1, padding=0, output_padding=0),
@@ -203,7 +203,7 @@ class Decoder(nn.Module):
         )
 
 
-    def forward(self, x, indices):
+    def forward(self, x): #, indices
         """Function that encodes an an image tensor, then decodes it
         Args:
             x (tensor): the  original image tensor
@@ -212,8 +212,8 @@ class Decoder(nn.Module):
         """
         decoded_Unlinear = self.decoder_Linear(x)
         decoded_unflatten = self.decoder_Unflatten(decoded_Unlinear)
-        decoded_unpooling = self.decoder_MaxUnpool2d(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
-        decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded_unpooling)
+        # decoded_unpooling = self.decoder_MaxUnpool2d(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
+        decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded_unflatten)
         decoded = self.BatchNormalization(decoded)
         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
         decoded = self.decoder_ReLu_ConvTranspose2d_1(decoded)
@@ -229,8 +229,8 @@ class Autoencoder(nn.Module):
         self.decoder = Decoder()
 
     def forward(self, x):
-        encoded, indices = self.encoder(x)
-        decoded = self.decoder(encoded, indices)
+        encoded = self.encoder(x) #, indices
+        decoded = self.decoder(encoded) #, indices
         return decoded
 
 def train(data, autoencoder):
@@ -242,7 +242,7 @@ def train(data, autoencoder):
     """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
-    num_epochs = 2
+    num_epochs = 50
     outputs = []
 
     i=0
@@ -265,7 +265,7 @@ def train(data, autoencoder):
             print("")
         i=0
 
-        print(f'______________Epoch:{epoch+1}, Loss:{loss.item():.4f}')
+        print(f'__________Epoch:{epoch+1}, Loss:{loss.item():.4f}')
         outputs.append((epoch, img, recon))
 
 def save(model, path):
@@ -402,8 +402,8 @@ def decoding_images(decoder, encoder, path_to_image):
     """
     image_tensor= Image_Conversion_to_tensor(path_to_image)
     X=image_tensor.reshape(1,3,64,64)
-    encoded_vector, indices=encoder.forward(X)
-    decoded_tensor=decoder.forward(encoded_vector, indices)
+    encoded_vector=encoder.forward(X) #, indices
+    decoded_tensor=decoder.forward(encoded_vector) #, indices
     decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,64,64))
 
     fig = plt.figure(figsize=(50,50))
@@ -413,14 +413,13 @@ def decoding_images(decoder, encoder, path_to_image):
     plt.imshow(mpimg.imread(path_to_image))
     plt.show()
 
-
 if __name__ == "__main__":
-    # my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test.pt",'few_faces',"decoder_fitted_test.pt","encoder_fitted_test.pt")
-    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
-
-    loaded_decoder=load_decoder("decoder_fitted_test.pt")
-    loaded_encoder=load_encoder("encoder_fitted_test.pt")
-    decoding_images(loaded_decoder,loaded_encoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test1.pt",'few_faces',"decoder_fitted_test.pt","encoder_fitted_test.pt")
+    comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    #
+    # loaded_decoder=load_decoder("decoder_fitted_test.pt")
+    # loaded_encoder=load_encoder("encoder_fitted_test.pt")
+    # decoding_images(loaded_decoder,loaded_encoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
     # my_autoencoder_loaded=loading_autoencoder("autoencoder_fitted_29faces_10epochs.pt")
     # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
