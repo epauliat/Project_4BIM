@@ -10,7 +10,7 @@ from keras_preprocessing.image import img_to_array
 
 import torch
 import torch.nn as nn
-from torchvision import transforms
+from torchvision import transforms, datasets
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -54,19 +54,22 @@ def Data_import():
      list: array of all the image as tensors
 
     """
+    batchSize = 20
+    dataset = datasets.ImageFolder(root='faces', transform=transforms.Compose([transforms.Resize((64,64)),transforms.ToTensor()]))
+    loader = torch.utils.data.DataLoader(dataset, batch_size = batchSize)
 
-    files = os.listdir('faces')
-    data=[]
-    for name in files:
-        picture = os.listdir('faces/'+name)
-        for p in picture:
-            data.append(Image_Conversion_to_tensor("faces/"+name+"/"+p))
-    return data
+    # files = os.listdir('faces')
+    # data=[]
+    # for name in files:
+    #     picture = os.listdir('faces/'+name)
+    #     for p in picture:
+    #         data.append(Image_Conversion_to_tensor("faces/"+name+"/"+p))
+    return loader
 
 def Image_Conversion_to_tensor(path):
     """Function that converts an image to an array, using a PIL format
     Args:
-        path (str): the image path from the working directory
+        path (str): theresize((64,64)) image path from the working directory
     Returns:
         tensor: the image tensor correspinding to the path
     """
@@ -109,6 +112,7 @@ class Autoencoder(nn.Module):
             nn.Sigmoid()
         )
 
+
     def forward(self, x):
         """Function that encodes an an image tensor, then decodes it
         Args:
@@ -116,6 +120,7 @@ class Autoencoder(nn.Module):
         Returns:
             tensor: the image tensor after being decoded
         """
+
         encoded = self.encoder_Conv2d_ReLU_1(x)
         encoded = self.encoder_Conv2d_ReLU_2(encoded)
         encoded = self.BatchNormalization(encoded)
@@ -149,22 +154,27 @@ def train(data, autoencoder):
     """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
-    num_epochs = 10
+    num_epochs = 6
     outputs = []
+
     i=0
     for epoch in range(num_epochs):
-        for img in data:
-            img = img.reshape(1, 3, 64, 64) # -> use for Autoencoder_Linear
-            print(str(i), end=',')
-            sys.stdout.flush()
-            i+=1
-            recon = autoencoder(img)
-            # print("hereeeeeee")
-            loss = criterion(recon, img)
-
+        for (index, batch) in enumerate(data):
+            loss=0
+            print("batch number "+str(index), end="  :")
+            for j in range(len(batch[0])):
+                img=batch[0][j]
+                batchsize=len(batch[0])
+                img = img.reshape(1, 3, 64, 64)
+                recon=autoencoder(img)
+                print(str(i), end=",")
+                sys.stdout.flush()
+                i+=1
+                loss+=criterion(recon, img)
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+            print("")
         i=0
 
         print(f'______________Epoch:{epoch+1}, Loss:{loss.item():.4f}')
