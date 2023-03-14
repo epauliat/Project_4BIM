@@ -8,18 +8,17 @@ import matplotlib.pyplot as plt
 
 # Random genome generation function
 def generate_array(size, max = 100, min = 0):
-    """Function that generates an array of int comprised between max and min
+    """Function that generates an array of float comprised between max and min
     Args:
         size (int): the length of the array to be generated
-        max (int): Maximal value
-        min (int): Minimal value
+        max (float): Maximal value
+        min (float): Minimal value
     Returns:
         numpy.ndarray: array_
     """
     array_ = []
     for i in range(size):
         num = int(np.random.random()*(max-min)+min)
-
         array_.append(num)
     return np.array(array_)
 
@@ -86,14 +85,15 @@ def array_mutation(array_, P):
     """Function that mutates an array randomly
     Args:
         array_ (numpy.ndarray): The array to be mutated
-        P (float): Mutation factor
+        P (float): Mutation probability
     Returns:
         numpy.ndarray: newArray_
     """
     S = len(array_)
     newArray_ = np.copy(array_)
     for i in range(S):
-        newArray_[i] = array_[i] + np.random.randint(-2, 3)
+        if np.random.random()<P:
+            newArray_[i] = array_[i] + np.random.normal(0, 2, 1)
     return newArray_
 
 
@@ -131,7 +131,6 @@ def coupures(size, N):
 
 def multi_point_crossover(parents):
     """Cette fonction créé une liste de vecteurs enfants en recombinant les parents avec les différents points de coupure
->>>>>>> 2f003107369158b8305eef7808c0017cffe108b0
 
     Args:
         parents : liste des vecteurs après mutation
@@ -148,6 +147,8 @@ def multi_point_crossover(parents):
         parents = childs
     return childs
 
+
+
 def liste_mutants_select(vect_select):
     """renvoie la liste de tous les vecteurs mutés à partir des vecteurs séléctionnés
     Args:
@@ -156,7 +157,6 @@ def liste_mutants_select(vect_select):
         mutants_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur mutés, dans un array (un array d'array)
     """
     mutants_select=np.copy(vect_select)
-
     for i in range(len(vect_select)-1): #pour chaque vecteur de mon array
         mutants_select[i]=array_mutation(vect_select[i])
 
@@ -198,9 +198,7 @@ def newGeneration(population_, target, select = .5):
     Returns:
         numpy.ndarray: newPopulation_
     """
-    print(len(population_))
     population_ = select_Arrays(population_, target, select)
-    print(len(population_))
     newPopulation_ = []
 
     for array in population_:
@@ -290,13 +288,5 @@ for i in child:
 
 
 print("######################")
-
-A = np.array([[1,2,3]])
-B = np.array([[4,5,6]])
-C = np.array([[4,5,6]])
-
-A = np.append(A, B, C)
-
-print(A)
 
 '''
