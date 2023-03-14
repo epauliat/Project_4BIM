@@ -54,7 +54,7 @@ def Data_import(path):
      list: array of all the image as tensors
 
     """
-    batchSize = 200
+    batchSize = 65
     dataset = datasets.ImageFolder(root=path, transform=transforms.Compose([transforms.Resize((64,64)),transforms.ToTensor()]))
     loader = torch.utils.data.DataLoader(dataset, batch_size = batchSize)
 
@@ -242,7 +242,7 @@ def train(data, autoencoder):
     """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
-    num_epochs = 5
+    num_epochs = 2
     outputs = []
 
     i=0
@@ -278,7 +278,34 @@ def save(model, path):
 
     # print(model.state_dict())
     # print("____________________ SAVE FUNCTION STATE DICT __________________")
+    # torch.save(model.state_dict(), path)
     torch.save(model.state_dict(), path)
+
+def save_decoder(model, path):
+    """Function that saves a model to a file
+    Args:
+        autoencoder (Autoencoder): the model that we want to save
+    Returns:
+        None
+    """
+
+    # print(model.state_dict())
+    # print("____________________ SAVE FUNCTION STATE DICT __________________")
+    # torch.save(model.state_dict(), path)
+    torch.save(model.decoder.state_dict(), path)
+
+def save_encoder(model, path):
+    """Function that saves a model to a file
+    Args:
+        autoencoder (Autoencoder): the model that we want to save
+    Returns:
+        None
+    """
+
+    # print(model.state_dict())
+    # print("____________________ SAVE FUNCTION STATE DICT __________________")
+    # torch.save(model.state_dict(), path)
+    torch.save(model.encoder.state_dict(), path)
 
 def load(path):
     """Function that loads an autoencoder from a file
@@ -292,7 +319,31 @@ def load(path):
     autoencoder.eval()
     return autoencoder
 
-def creating_training_saving_autoencoder(saving_path, data_path):
+def load_decoder(path):
+    """Function that loads an autoencoder from a file
+    Args:
+        path (str): the path we want to load from
+    Returns:
+        autoencoder (Autoencoder): the loaded autoencoder
+    """
+    decoder=Decoder()
+    decoder.load_state_dict(torch.load(path))
+    decoder.eval()
+    return decoder
+
+def load_encoder(path):
+    """Function that loads an autoencoder from a file
+    Args:
+        path (str): the path we want to load from
+    Returns:
+        autoencoder (Autoencoder): the loaded autoencoder
+    """
+    encoder=Encoder()
+    encoder.load_state_dict(torch.load(path))
+    encoder.eval()
+    return encoder
+
+def creating_training_saving_autoencoder(saving_path, data_path,saving_path_decoder,saving_path_encoder):
     """Function that creates an autoencoder, trains it, and saves it to a file
     Args:
         None
@@ -305,6 +356,8 @@ def creating_training_saving_autoencoder(saving_path, data_path):
     print("I got the autoencoder")
     train(data, my_autoencoder)
     save(my_autoencoder, saving_path)
+    save_decoder(my_autoencoder, saving_path_decoder)
+    save_encoder(my_autoencoder, saving_path_encoder)
     return my_autoencoder
 
 def loading_autoencoder(path):
@@ -338,12 +391,36 @@ def comparing_images(autoencoder, path_to_image):
     plt.imshow(mpimg.imread(path_to_image))
     plt.show()
 
+def decoding_images(decoder, encoder, path_to_image):
+    """Function that shows 2 images: one originale and one that has been
+    been coded and decoded by an autoencoder
+    Args:
+     autoencoder (Autoencoder): the autoencoder used
+     path (str): the path we want to load the image from
+    Returns:
+     None
+    """
+    image_tensor= Image_Conversion_to_tensor(path_to_image)
+    X=image_tensor.reshape(1,3,64,64)
+    encoded_vector, indices=encoder.forward(X)
+    decoded_tensor=decoder.forward(encoded_vector, indices)
+    decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,64,64))
+
+    fig = plt.figure(figsize=(50,50))
+    fig.add_subplot(1, 2, 1)
+    plt.imshow(decoded_pil)
+    fig.add_subplot(1, 2, 2)
+    plt.imshow(mpimg.imread(path_to_image))
+    plt.show()
+
 
 if __name__ == "__main__":
-    my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test.pt",'faces')
-    comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
-    # summary(my_autoencoder)
+    # my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test.pt",'few_faces',"decoder_fitted_test.pt","encoder_fitted_test.pt")
+    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
+    loaded_decoder=load_decoder("decoder_fitted_test.pt")
+    loaded_encoder=load_encoder("encoder_fitted_test.pt")
+    decoding_images(loaded_decoder,loaded_encoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
     # my_autoencoder_loaded=loading_autoencoder("autoencoder_fitted_29faces_10epochs.pt")
     # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
