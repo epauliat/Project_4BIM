@@ -46,7 +46,7 @@ def Image_Visualisation(path):
     plt.imshow(image)
     plt.show()
 
-def Data_import():
+def Data_import(path):
     """Function that imports all the images in the file faces, and put them in a list
     Args:
      None
@@ -54,8 +54,8 @@ def Data_import():
      list: array of all the image as tensors
 
     """
-    batchSize = 20
-    dataset = datasets.ImageFolder(root='faces', transform=transforms.Compose([transforms.Resize((64,64)),transforms.ToTensor()]))
+    batchSize = 200
+    dataset = datasets.ImageFolder(root=path, transform=transforms.Compose([transforms.Resize((64,64)),transforms.ToTensor()]))
     loader = torch.utils.data.DataLoader(dataset, batch_size = batchSize)
 
     # files = os.listdir('faces')
@@ -80,9 +80,73 @@ def Image_Conversion_to_tensor(path):
     image_tensor=transformation(image_pil_resized)
     return image_tensor
 
-class Autoencoder(nn.Module):
+# class Autoencoder(nn.Module):
+#     def __init__(self):
+#         """Autoencoder Constructor
+#         """
+#         super().__init__()
+#         # N, 1, 64, 64
+#         self.encoder_Conv2d_ReLU_1 = nn.Sequential(
+#             nn.Conv2d(3, 16, 3, stride=1, padding=0),
+#             nn.ReLU()
+#         )
+#         self.encoder_Conv2d_ReLU_2 = nn.Sequential(
+#             nn.Conv2d(16, 16, 3, stride=1, padding=0),
+#             nn.ReLU()
+#         )
+#         self.encoder_MaxPool2d = nn.MaxPool2d(3, return_indices=True)
+#         self.encoder_Flatten = nn.Flatten()
+#         self.encoder_Linear = nn.Linear(5776,100)
+#
+#         self.BatchNormalization = nn.BatchNorm2d(16)
+#
+#         self.decoder_Linear = nn.Linear(100,5776)
+#         self.decoder_Unflatten = nn.Unflatten(1,[16,19,19])
+#         self.decoder_MaxUnpool2d = nn.MaxUnpool2d(3)
+#         self.decoder_ReLu_ConvTranspose2d_2 = nn.Sequential(
+#             nn.ConvTranspose2d(16, 16, 3, stride=1, padding=0, output_padding=0),
+#             nn.ReLU()
+#         )
+#         self.decoder_ReLu_ConvTranspose2d_1 = nn.Sequential(
+#             nn.ConvTranspose2d(16, 3, 3, stride=1, padding=0, output_padding=0),
+#             nn.Sigmoid()
+#         )
+#
+#
+#     def forward(self, x):
+#         """Function that encodes an an image tensor, then decodes it
+#         Args:
+#             x (tensor): the  original image tensor
+#         Returns:
+#             tensor: the image tensor after being decoded
+#         """
+#
+#         encoded = self.encoder_Conv2d_ReLU_1(x)
+#         encoded = self.encoder_Conv2d_ReLU_2(encoded)
+#         encoded = self.BatchNormalization(encoded)
+#         encoded = self.encoder_Conv2d_ReLU_2(encoded)
+#         # print(encoded.size())
+#         encoded_pooling, indices = self.encoder_MaxPool2d(encoded)
+#         # print(encoded_pooling.size())
+#         encoded_flatten = self.encoder_Flatten(encoded_pooling)
+#         encoded_Linear = self.encoder_Linear(encoded_flatten)
+#         # print(encoded_Linear.size())
+#
+#         decoded_Unlinear = self.decoder_Linear(encoded_Linear)
+#         # print(decoded_Unlinear.size())
+#         decoded_unflatten = self.decoder_Unflatten(decoded_Unlinear)
+#         decoded_unpooling = self.decoder_MaxUnpool2d(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
+#
+#         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded_unpooling)
+#         decoded = self.BatchNormalization(decoded)
+#         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
+#         decoded = self.decoder_ReLu_ConvTranspose2d_1(decoded)
+
+        # return decoded
+
+class Encoder(nn.Module):
     def __init__(self):
-        """Autoencoder Constructor
+        """Encoder Constructor
         """
         super().__init__()
         # N, 1, 64, 64
@@ -100,6 +164,32 @@ class Autoencoder(nn.Module):
 
         self.BatchNormalization = nn.BatchNorm2d(16)
 
+
+    def forward(self, x):
+        """Function that encodes an an image tensor
+        Args:
+            x (tensor): the  original image tensor
+        Returns:
+            tensor: the image tensor after being encoded
+        """
+
+        encoded = self.encoder_Conv2d_ReLU_1(x)
+        encoded = self.encoder_Conv2d_ReLU_2(encoded)
+        encoded = self.BatchNormalization(encoded)
+        encoded = self.encoder_Conv2d_ReLU_2(encoded)
+        encoded_pooling, indices = self.encoder_MaxPool2d(encoded)
+        encoded_flatten = self.encoder_Flatten(encoded_pooling)
+        encoded_Linear = self.encoder_Linear(encoded_flatten)
+        return encoded_Linear, indices
+
+class Decoder(nn.Module):
+
+    def __init__(self):
+        """Decoder Constructor
+        """
+        super().__init__()
+        self.BatchNormalization = nn.BatchNorm2d(16)
+
         self.decoder_Linear = nn.Linear(100,5776)
         self.decoder_Unflatten = nn.Unflatten(1,[16,19,19])
         self.decoder_MaxUnpool2d = nn.MaxUnpool2d(3)
@@ -113,30 +203,16 @@ class Autoencoder(nn.Module):
         )
 
 
-    def forward(self, x):
+    def forward(self, x, indices):
         """Function that encodes an an image tensor, then decodes it
         Args:
             x (tensor): the  original image tensor
         Returns:
             tensor: the image tensor after being decoded
         """
-
-        encoded = self.encoder_Conv2d_ReLU_1(x)
-        encoded = self.encoder_Conv2d_ReLU_2(encoded)
-        encoded = self.BatchNormalization(encoded)
-        encoded = self.encoder_Conv2d_ReLU_2(encoded)
-        # print(encoded.size())
-        encoded_pooling, indices = self.encoder_MaxPool2d(encoded)
-        # print(encoded_pooling.size())
-        encoded_flatten = self.encoder_Flatten(encoded_pooling)
-        encoded_Linear = self.encoder_Linear(encoded_flatten)
-        # print(encoded_Linear.size())
-
-        decoded_Unlinear = self.decoder_Linear(encoded_Linear)
-        # print(decoded_Unlinear.size())
+        decoded_Unlinear = self.decoder_Linear(x)
         decoded_unflatten = self.decoder_Unflatten(decoded_Unlinear)
         decoded_unpooling = self.decoder_MaxUnpool2d(decoded_unflatten, indices, output_size = [1, 26, 58, 58])
-
         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded_unpooling)
         decoded = self.BatchNormalization(decoded)
         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
@@ -144,6 +220,18 @@ class Autoencoder(nn.Module):
 
         return decoded
 
+class Autoencoder(nn.Module):
+    def __init__(self):
+        """Autoencoder Constructor
+        """
+        super().__init__()
+        self.encoder = Encoder()
+        self.decoder = Decoder()
+
+    def forward(self, x):
+        encoded, indices = self.encoder(x)
+        decoded = self.decoder(encoded, indices)
+        return decoded
 
 def train(data, autoencoder):
     """Function that train an autoencoder with a given dataset
@@ -154,7 +242,7 @@ def train(data, autoencoder):
     """
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
-    num_epochs = 6
+    num_epochs = 5
     outputs = []
 
     i=0
@@ -180,14 +268,17 @@ def train(data, autoencoder):
         print(f'______________Epoch:{epoch+1}, Loss:{loss.item():.4f}')
         outputs.append((epoch, img, recon))
 
-def save(autoencoder, path):
-    """Function that saves an autoencoder to a file
+def save(model, path):
+    """Function that saves a model to a file
     Args:
         autoencoder (Autoencoder): the model that we want to save
     Returns:
         None
     """
-    torch.save(autoencoder.state_dict(), path)
+
+    # print(model.state_dict())
+    # print("____________________ SAVE FUNCTION STATE DICT __________________")
+    torch.save(model.state_dict(), path)
 
 def load(path):
     """Function that loads an autoencoder from a file
@@ -201,19 +292,19 @@ def load(path):
     autoencoder.eval()
     return autoencoder
 
-def creating_training_saving_autoencoder(path):
+def creating_training_saving_autoencoder(saving_path, data_path):
     """Function that creates an autoencoder, trains it, and saves it to a file
     Args:
         None
     Returns:
         autoencoder (Autoencoder): the created autoencoder
     """
-    data=Data_import()
+    data=Data_import(data_path)
     print("I got the data")
     my_autoencoder=Autoencoder()
     print("I got the autoencoder")
     train(data, my_autoencoder)
-    save(my_autoencoder, path)
+    save(my_autoencoder, saving_path)
     return my_autoencoder
 
 def loading_autoencoder(path):
@@ -249,7 +340,7 @@ def comparing_images(autoencoder, path_to_image):
 
 
 if __name__ == "__main__":
-    my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test.pt")
+    my_autoencoder=creating_training_saving_autoencoder("autoencoder_fitted_test.pt",'faces')
     comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
     # summary(my_autoencoder)
 
