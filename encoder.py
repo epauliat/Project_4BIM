@@ -282,9 +282,10 @@ def save(model, path):
     torch.save(model.state_dict(), path)
 
 def save_decoder(model, path):
-    """Function that saves a model to a file
+    """Function that saves a decoder model to a file
     Args:
-        autoencoder (Autoencoder): the model that we want to save
+        model (Autoencoder): the model that we want to save
+        path (str): the file path to which we want to save our model
     Returns:
         None
     """
@@ -295,9 +296,10 @@ def save_decoder(model, path):
     torch.save(model.decoder.state_dict(), path)
 
 def save_encoder(model, path):
-    """Function that saves a model to a file
+    """Function that saves an encoder model to a file
     Args:
-        autoencoder (Autoencoder): the model that we want to save
+        model (Autoencoder): the model that we want to save
+        path (str): the file path to which we want to save our model
     Returns:
         None
     """
