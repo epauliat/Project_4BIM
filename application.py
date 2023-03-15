@@ -190,6 +190,9 @@ class Application(Tk):
 						pic.show()
 						self.destroy()
 					else:
+						files = glob.glob('temp/*')
+						for f in files:
+							os.remove(f)
 						for i in range(len(self.slt)):
 							picture = self.slt[i].image
 							picture.save('temp/'+str(i)+'.jpg')
@@ -232,8 +235,9 @@ class Application(Tk):
 				for i in range(len(self.button)):
 				 	self.button[i].configure(bg='white')
 			else:
-				#suprrimer les anciennes photos selected
-				#envoyer selected images
+				files = glob.glob('temp/*')
+				for f in files:
+					os.remove(f)
 				for i in range(len(self.slt)):
 					picture = self.slt[i].image
 					picture.save('temp/'+str(i)+'.jpg')
