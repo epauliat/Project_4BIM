@@ -180,7 +180,7 @@ def mutants_complets(vect_select,mutants_select,P):
     new_mutant = np.array([]) #un nouveau vecteur qui sera muté à partir de la sélection
     if S<5 :
         nb_mut_manquants=5-S #10=len(vect_select) = taille de la liste des vecteurs affichés
-        for i in range(nb_mut_manquants):
+        for i in range (nb_mut_manquants):
             new_mutant=array_mutation(vect_select[i],P)
             newcompleteMut_.append(new_mutant)
 

@@ -11,6 +11,7 @@ from tkinter import messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 import os
 import glob
+from Fusion import *
 
 ###########################
 # Class Application #
@@ -32,6 +33,8 @@ class Application(Tk):
 		self.slt = []
 		self.inc=0
 		self.tour=1
+		self.first=True
+		self.font = ("Arial",10)
 		Grid.rowconfigure(self, 0, weight=1)
 		Grid.columnconfigure(self, 0, weight=1)
 		Grid.rowconfigure(self, 1, weight=1)
@@ -79,7 +82,7 @@ class Application(Tk):
 		global w_frame, lbl, tuto, lancer, e
 		w_frame = Frame(self)
 		w_frame.place(x=self.winfo_screenwidth()/4,y=self.winfo_screenheight()/3)
-		lbl = Label(w_frame, text="Bienvenue sur l'application de projet FBI.\n Ce projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nNous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en violet.\n Lorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=("Arial",10))
+		lbl = Label(w_frame, text="Bienvenue sur l'application de projet FBI.\n Ce projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nNous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en violet.\n Lorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font)
 		lbl.grid(row=0,column=0,columnspan=2)
 
 		tuto = Button(w_frame, text="Voir le tutoriel",command=self.tuto_window)
@@ -100,14 +103,13 @@ class Application(Tk):
 		lbl.destroy()
 		tuto.destroy()
 		lancer.destroy()
-		#e.destroy()
 		self.consigne_frame = Frame(self,bd=8,relief='raise')
 		self.consigne_frame.grid(row=0,column=1,columnspan=5,sticky="nsew")
-		self.consigne_lbl = Label(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour indigo",font=("Arial",10))
+		self.consigne_lbl = Label(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour indigo",font=self.font)
 		self.consigne_lbl.grid(row=0,column=0,sticky="nsew")
 		self.selected_frame = Frame(self,bd=8)
 		self.selected_frame.grid(row=0,column=0,rowspan=5,sticky="nsew")
-		self.selected_lbl = Label(self.selected_frame, text="Voici les images que vous avez selectionné precedemment",font=("Arial",10))
+		self.selected_lbl = Label(self.selected_frame, text="Voici les images que vous avez selectionné precedemment",font=self.font)
 		self.selected_lbl.grid(row=1,column=0,sticky="nsew")
 		self.image = self.list_image()
 		self.button = []
@@ -121,11 +123,10 @@ class Application(Tk):
 			else:
 				j=i-5
 				self.button[i].grid(row=2,column=j+1,sticky="nsew")
-		self.font = "Arial"
 
-		self.bouton_flw = Button(self,text="Sélection terminée",font=("Arial",10),command=self.ia)
+		self.bouton_flw = Button(self,text="Sélection terminée",font=self.font,command=self.ia)
 		self.bouton_flw.grid(row=3,column=5,sticky="nsew")
-		self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=("Arial",10))
+		self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=self.font)
 		self.label_tour.grid(row=3,column=4,sticky="nsew")
 
 
@@ -137,10 +138,20 @@ class Application(Tk):
 			list : self.list_img
 		"""
 		self.list_img = []
-		for i in range(10):
-			self.img = Image.open("images/"+str(i)+".PNG")
-			self.resized_img = self.img.resize((190,190))
-			self.list_img.append(self.resized_img)
+		if self.first==True: #premier tour donc on va chercher les images dans la banque 
+			for i in range(10):
+				x = random.randint(0, 10000) #pour choisir aléatoirement des images dans la banque d'image
+				img = Image.open("images/"+str(i)+".jpg")
+				img.save("images/"+str(i)+".PNG")
+				self.img=Image.open("images/"+str(i)+".PNG")
+				self.resized_img = self.img.resize((190,190))
+				self.list_img.append(self.resized_img)
+			self.first=False
+		else:
+			for i in range(10):
+				self.img = Image.open("images/"+str(i)+".PNG") #fichier à changer si on n'enregistre pas les images décodées ici
+				self.resized_img = self.img.resize((190,190))
+				self.list_img.append(self.resized_img)
 		return self.list_img
 
 	def selected(self,btn):
@@ -179,6 +190,10 @@ class Application(Tk):
 						pic.show()
 						self.destroy()
 					else:
+						for i in range(len(self.slt)):
+							picture = self.slt[i].image
+							picture.save('temp/'+str(i)+'.jpg')
+						mutation(len(self.slt))
 						self.inc+=1
 						self.all_slt.append(self.slt[0])
 						picture = self.slt[0].image
@@ -190,13 +205,24 @@ class Application(Tk):
 							img = ImageTk.PhotoImage(self.all_slt[i].image.resize((160,160)))
 							self.text.image_create(INSERT, padx=45, pady=5, image=img)
 							self.text.images.append(img)
-						self.list_image()
 						self.slt = []
+						self.image = self.list_image()
+						self.button = []
 						for i in range(len(self.button)):
-							self.button[i].configure(bg='white')
+							self.button[i].destroy()
+						for i in range(10):
+							im_b = ImButton(self,ImageTk.PhotoImage(self.image[i]),self.image[i],bd=5)
+							self.button.append(im_b)
+						for i in range(len(self.button)):
+							self.button[i].configure(command=lambda button=self.button[i]: self.selected(button))
+							if i<5:
+								self.button[i].grid(row=1,column=i+1,sticky="nsew")
+							else:
+								j=i-5
+								self.button[i].grid(row=2,column=j+1,sticky="nsew")
 						self.tour+=1
 						self.label_tour.destroy()
-						self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=("Arial",10))
+						self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=self.font)
 						self.label_tour.grid(row=3,column=4,sticky="nsew")
 				else:
 					messagebox.showerror("Nombre d'image selectionné incorrect","Veuillez choisir au minimum 1 portrait")
@@ -206,6 +232,12 @@ class Application(Tk):
 				for i in range(len(self.button)):
 				 	self.button[i].configure(bg='white')
 			else:
+				#suprrimer les anciennes photos selected
+				#envoyer selected images
+				for i in range(len(self.slt)):
+					picture = self.slt[i].image
+					picture.save('temp/'+str(i)+'.jpg')
+				mutation(len(self.slt))
 				for i in range(len(self.slt)):
 					self.inc+=1
 					self.all_slt.append(self.slt[i])
@@ -218,13 +250,24 @@ class Application(Tk):
 					img = ImageTk.PhotoImage(self.all_slt[i].image.resize((160,160)))
 					self.text.image_create(INSERT, padx=45, pady=5, image=img)
 					self.text.images.append(img)
-				self.list_image()
 				self.slt = []
+				self.image = self.list_image()
+				self.button = []
 				for i in range(len(self.button)):
-					self.button[i].configure(bg='white')
+					self.button[i].destroy()
+				for i in range(10):
+					im_b = ImButton(self,ImageTk.PhotoImage(self.image[i]),self.image[i],bd=5)
+					self.button.append(im_b)
+				for i in range(len(self.button)):
+					self.button[i].configure(command=lambda button=self.button[i]: self.selected(button))
+					if i<5:
+						self.button[i].grid(row=1,column=i+1,sticky="nsew")
+					else:
+						j=i-5
+						self.button[i].grid(row=2,column=j+1,sticky="nsew")
 				self.tour+=1
 				self.label_tour.destroy()
-				self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=("Arial",10))
+				self.label_tour = Label(self,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=self.font)
 				self.label_tour.grid(row=3,column=4,sticky="nsew")
 		else:
 			for i in range(len(self.slt)):
@@ -257,7 +300,7 @@ class Application(Tk):
 			label="Options",
 			menu=file_tuto_menu,
 			underline=0)
-		lbl = Label(self.top_level,text="Tutoriel",font=("Arial",10)).pack()
+		lbl = Label(self.top_level,text="Tutoriel",font=self.font).pack()
 		btn2=Button(self.top_level, text="Close window", command=self.top_level.destroy).pack()
 
 class ImButton(tk.Button):
