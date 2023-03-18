@@ -1,16 +1,24 @@
+#################
+#    IMPORTS    #
+#################
+
 import os
 import sys
-from PIL import Image
+import time
+import torch
+
 import numpy as np
+import torch.nn as nn
+
+from PIL import Image
+from torchsummary import summary
 from matplotlib import pyplot as plt
 from matplotlib import image as mpimg
-from torchsummary import summary
-
+from torchvision import transforms, datasets
 from keras_preprocessing.image import img_to_array
 
-import torch
-import torch.nn as nn
-from torchvision import transforms, datasets
+
+
 
 def Dataset_Visualisation():
     """Function that prints in seperate popups the images contained in the faces repository
@@ -50,7 +58,7 @@ def Data_import(path, batchsize):
      list: array of all the image as tensors
     """
     dataset = datasets.ImageFolder(root=path, transform=transforms.Compose([transforms.Resize((128,128)),transforms.ToTensor()]))
-    loader = torch.utils.data.DataLoader(dataset, batch_size = batchsize)
+    loader = torch.utils.data.DataLoader(dataset, batch_size = batchsize, shuffle = True)
     return loader
 
 def Image_Conversion_to_tensor(path):
@@ -179,10 +187,13 @@ def train(nb_epoch, data, autoencoder):
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=1e-3, weight_decay=1e-5)
     outputs = []
+    losses_curve = []
     i=0
     for epoch in range(nb_epoch):
+        tic = time.time()
         for (index, batch) in enumerate(data):
             loss=0
+            loss_curve=0
             print("batch number "+str(index), end="  :")
             for j in range(len(batch[0])):
                 img=batch[0][j]
@@ -194,15 +205,33 @@ def train(nb_epoch, data, autoencoder):
                     print(str(i), end=",")
                 sys.stdout.flush()
                 i+=1
-                loss+=criterion(recon, img)
-            optimizer.zero_grad()
+                loss += criterion(recon, img)
+
+
             loss.backward()
             optimizer.step()
-            print("")
-        i=0
+            optimizer.zero_grad()
 
-        print(f'__________Epoch:{epoch+1}, Loss:{loss.item():.4f}')
+            loss_curve += float(loss/len(batch[0]))
+
+            print("")
+        losses_curve.append(loss_curve)
+        i=0
+        toc = time.time()
+        print(f'__________Epoch:{epoch+1}, Loss:{loss.item():.4f}, Training time : {toc-tic:.2f} s')
         outputs.append((epoch, img, recon))
+    return losses_curve
+
+def plot_Losses_Curve(losses_curve_list):
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel("epoch")
+    ax1.set_ylabel("loss")
+    ax1.plot(losses_curve_list, "r")
+    plt.xticks(np.arange(len(losses_curve_list)), np.arange(1, len(losses_curve_list)+1))
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    ax1.set_title("Loss per epoch")
+    plt.show()
+
 
 def save(model, path):
     """Function that saves a model to a file
@@ -290,7 +319,8 @@ def creating_training_saving_autoencoder(nb_epoch, batchsize, saving_path, data_
     print("I got the data")
     my_autoencoder=Autoencoder()
     print("I got the autoencoder")
-    train(nb_epoch, data, my_autoencoder)
+    losses = train(nb_epoch, data, my_autoencoder)
+    plot_Losses_Curve(losses)
     save(my_autoencoder, saving_path)
     save_decoder(my_autoencoder, saving_path_decoder)
     save_encoder(my_autoencoder, saving_path_encoder)
@@ -361,9 +391,11 @@ def decoding_Vector(x, decoder):
 
 if __name__ == "__main__":
     epoch = 5
-    batch_size = 10
+    batch_size = 20
     my_autoencoder=creating_training_saving_autoencoder(epoch, batch_size, "models/autoencoder_18_03.pt",'few_faces',"models/decoder_18_03.pt","models/encoder_18_03.pt")
     comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
+    comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
+    comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # loaded_decoder=load_decoder("saved16mars/saved16mars_decoder_fitted.pt")
     # loaded_encoder=load_encoder("saved16mars/saved16mars_encoder_fitted.pt")
