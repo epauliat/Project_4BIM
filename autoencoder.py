@@ -17,6 +17,7 @@ from matplotlib import image as mpimg
 from torchvision import transforms, datasets
 from keras_preprocessing.image import img_to_array
 
+
 ###################
 #  DATA & IMAGES  #
 ###################
@@ -24,7 +25,7 @@ from keras_preprocessing.image import img_to_array
 def Data_import(path, batchsize):
     """Function that imports all the images in a given directory as a DataLoader
     Args:
-        path (str): directory path to images,
+        path (str): directory path to images
         batchsize (int): size of batches created by the DataLoader
     Returns:
         loader (DataLoader): object containing all the imported images in batches
@@ -102,7 +103,6 @@ class Encoder(nn.Module):
         return encoded
 
 class Decoder(nn.Module):
-
     def __init__(self):
         """Decoder constructor for input encoded tensor of size 1x128
         Args:
@@ -302,6 +302,7 @@ def load_encoder(path):
     encoder.eval()
     return encoder
 
+
 ######################
 #  ALL IN ONE MODEL  #
 #       METHOD       #
@@ -333,7 +334,6 @@ def training_Saving_Autoencoder(nb_epoch, batchsize, saving_path, data_path,savi
 #########################
 #  MODEL VISUALISATION  #
 #########################
-
 
 def comparing_images(autoencoder, path_to_image):
     """Function that shows 2 images: the original one and the recomposed one
@@ -414,7 +414,7 @@ if __name__ == "__main__":
 
     # TRAINING
 
-    epoch = 2
+    epoch = 5
     batch_size = 20
     my_autoencoder=training_Saving_Autoencoder(epoch, batch_size, "models/autoencoder_18_03.pt",'few_faces',"models/decoder_18_03.pt","models/encoder_18_03.pt")
     comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
@@ -430,7 +430,7 @@ if __name__ == "__main__":
     # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING AUTOENCODER
-    #
+
     # my_autoencoder_loaded=load_autoencoder("models/autoencoder_18_03.pt")
     # comparing_images(my_autoencoder_loaded,"few_faces/Adam_Ant/Adam_Ant_0001.jpg")
     # comparing_images(my_autoencoder_loaded,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
