@@ -137,10 +137,10 @@ def multi_point_crossover(parents):
 def array_mutation(array_,P):
     """Function that mutates an array randomly
     Args:
-    array_ (numpy.ndarray): The array to be mutated
-    P (float): Mutation factor
+        array_ (numpy.ndarray): The array to be mutated
+        P (float): Mutation factor
     Returns:
-    numpy.ndarray: newArray_
+        numpy.ndarray: newArray_
     """
     S = len(array_)
     newArray_ = np.copy(array_)
@@ -150,37 +150,38 @@ def array_mutation(array_,P):
 
 
 
-def liste_mutants_select(vect_select,P):
-    """renvoie la liste de tous les vecteurs mutés à partir des vecteurs séléctionnés
+def list_select_mutants(vect_select,P):
+    """Function that mutates randomly all the vectors selected, returns all in a list
     Args:
-        vect_select (_liste_): les vecteurs récupérés de la sélection de l'utilisateur dans une liste
+        vect_select (_list_): vectors selected by the user in a list
+        P (float): Mutation factor
     return
-        mutants_select (_liste_): les vecteurs récupérés de la sélection de l'utilisateur mutés, dans un array (un array d'array)
+        mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
     """
     mutants_select=vect_select.copy()
 
-    for i in range(len(vect_select)): #pour chaque vecteur de ma liste vect_select
-        mutants_select[i]=array_mutation(vect_select[i],P) #je mute ce vecteur avec la fonction array_mutation
+    for i in range(len(vect_select)): #for each vector of the list vect_select
+        mutants_select[i]=array_mutation(vect_select[i],P) #the vector is mutated with the function array_mutation
 
     return mutants_select
 
-def mutants_complets(vect_select,mutants_select,P):
-    """calcule le nb mutants manquants s'il y en a et complète la liste avec d'autres mutants (on veut la taille de la liste de mutants=taille de la liste des crossover)
-        hypothèse : l'utilisateur ne peut pas sélectionner plus de la moitié des images proposées
+def completes_mutants(vect_select,mutants_select,P):
+    """calculate all the missing mutants to complete the list of 5 mutants (to have 5 mutants and 5 vectors by crossing-over)
+    --> the user cannot select more than 5 images (10 in total)
     Args:
-        vect_select (_liste_): les vecteurs récupérés de la sélection de l'utilisateur dans une liste
-        mutants_select (_liste_): les vecteurs récupérés de la sélection de l'utilisateur déjà mutés dans une liste
+        vect_select (_list_): vectors selected by the user in a list
+        mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
+        
     Returns:
-        numpy.ndarray: newcompleteMut : les 5 vecteurs mutés dans une liste
+        numpy.ndarray: newcompleteMut : 5 vectors mutated in a list
     """
     S=len(mutants_select)
-    #s'il y a 10 vecteurs (images affichées à l'écran) on veut 5 mutants (et 5 modif en crossingover)
-    newcompleteMut_=mutants_select.copy() #on copie les vecteurs déjà mutés
-    #définir newmutant qui sera un nouveau vecteur muté
-    new_mutant = np.array([]) #un nouveau vecteur qui sera muté à partir de la sélection
+    #the size of mutants_select is inferior or equal to 5
+    newcompleteMut_=mutants_select.copy() #Copy of the vectors already mutated
+    new_mutant = np.array([]) #new_mutant will be a new vector mutated
     if S<5 :
-        nb_mut_manquants=5-S #10=len(vect_select) = taille de la liste des vecteurs affichés
-        for i in range (nb_mut_manquants):
+        nb_missing_mut=5-S 
+        for i in range (nb_missing_mut):
             new_mutant=array_mutation(vect_select[i],P)
             newcompleteMut_.append(new_mutant)
 
@@ -188,6 +189,37 @@ def mutants_complets(vect_select,mutants_select,P):
         newcompleteMut_=mutants_select.copy()
 
     return newcompleteMut_
+
+def mutatesAll(vect_select,P):
+    """_summary_ : function that returns the 5 mutated vectors in a list in once 
+
+        Args:
+            vect_select (_list_): vectors selected by the user in a list
+            P (float): Mutation factor 
+        Returns : 
+            numpy.ndarray: newcompleteMut : 5 vectors mutated in a list
+        """
+    mutants_select=list_select_mutants(vect_select,P)
+    newcompleteMut_=completes_mutants(vect_select,mutants_select,P)
+
+    return newcompleteMut_
+
+def allNewvectors(vect_select,P):
+    """_summary_ : function that returns the 10 new vectors (5 mutated + 5 crossing over) in a list in once (using all the previous functions)
+
+        Args:
+            vect_select (_list_): vectors selected by the user in a list
+            P (float): Mutation factor 
+        Returns : 
+            numpy.ndarray: allNewvec : 10 new vectors in a list to show to the user
+        """
+    allNewvec=[]
+    newcompleteMut_=mutatesAll(vect_select,P)
+    allNewvec.append(newcompleteMut_)
+    crossedover_vec=multi_point_crossover(newcompleteMut_)
+    allNewvec.append(crossedover_vec)
+
+    return allNewvec
 
 def newGeneration(population_, target, select = .5):
     """Generates a new population by performing mutations on
@@ -215,7 +247,8 @@ def newGeneration(population_, target, select = .5):
 # #############################
 # ######### Main/Test #########
 # #############################
-#
+if __name__ == '__main__':
+
 # '''
 # N = 15
 # size = 15
