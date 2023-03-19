@@ -37,8 +37,10 @@ if __name__ == '__main__':
     # decoding_images(loaded_decoder,loaded_encoder,"faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
 
     vect_select=[encoded_image1,encoded_image2,encoded_image3]
-    mutants_select=liste_mutants_select(vect_select,0)
-    list_mutated_vector=mutants_complets(vect_select,mutants_select,0)
+    list_mutated_vector=mutatesAll(vect_select,0)
+    allVectors=allNewvecctors(vect_select,0) #list of 10 : 5 mutated and 5 crossing over
+
+    
 
     #mutation only
     #fig = plt.figure(figsize=(100,100))
