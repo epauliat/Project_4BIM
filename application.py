@@ -12,6 +12,8 @@ from tkinter.scrolledtext import ScrolledText
 import os
 import glob
 from Fusion import *
+from reportlab.pdfgen.canvas import Canvas
+from datetime import date,datetime
 
 ###########################
 # Class Application #
@@ -102,6 +104,9 @@ class Application(Tk):
 		lbl.destroy()
 		tuto.destroy()
 		lancer.destroy()
+		self.date = date.today().strftime("%Y_%m_%d")
+		self.canva = Canvas("report_"+self.date+".pdf")
+		self.canva.setFont("Times-Roman",12)
 		self.consigne_frame = Frame(self,bd=8,relief='raise')
 		self.consigne_frame.grid(row=0,column=1,columnspan=5,sticky="nsew")
 		self.consigne_lbl = WrappingLabel(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour indigo",font=self.font)
@@ -192,7 +197,15 @@ class Application(Tk):
 						picture_f = self.slt[0].image
 						picture_f.save('agresseur.PNG')
 						pic = Image.open('agresseur.PNG')
-						pic.show()
+						self.canva.drawString(50,830,"Rapport de l'utilisation de l'intelligence artificielle dans le but de créer un portrait robot de l'agresseur.")
+						self.canva.drawString(50,810,str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" (UTC+1)"))
+						for i in range(len(self.all_slt)):
+							self.canva.drawString(50, 790,str(i)+'ème itération:') #pas bon
+							self.canva.drawImage("selected/"+str(i+1)+'.PNG',10+i*200,570)
+						self.canva.drawString(50,550,"Image de l'agresseur:")
+						self.canva.drawImage("agresseur.PNG",10,10) #modif coordonnées
+						self.canva.save()
+						#pic.show()
 						self.destroy()
 					else:
 						files = glob.glob('temp/*')
@@ -284,6 +297,12 @@ class Application(Tk):
 				self.all_slt.append(self.slt[i])
 				picture = self.slt[i].image
 				picture.save('selected/'+str(self.inc)+'.PNG')
+				self.canva.drawString(50,830,"Rapport de l'utilisation de l'intelligence artificielle dans le but de créer un portrait robot de l'agresseur.")
+				self.canva.drawString(50,810,str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" (UTC+1)"))
+				for i in range(len(self.all_slt)):
+					self.canva.drawString(50, 790,str(i)+'ème itération:')
+					#self.canva.drawImage("selected/"+str(i)+'.PNG',50,780)
+				self.canva.save()
 			messagebox.showinfo("Message de fin","Vous n'avez pas trouvé de portrait correspondant à votre agresseur dans le nombre d'itération autorisé. Les photos que vous aviez selectionnées sont enregistrées dans le dossier (selected). Merci pour votre collaboration.")
 			self.destroy()
 
