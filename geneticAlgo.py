@@ -170,7 +170,7 @@ def array_mutation(array_, P):
     S = len(array_)
     mutatedArray_ = np.copy(array_)
     for i in range(S):
-        mutatedArray_[i] = array_[i] + np.random.randint(-P+1, P)
+        mutatedArray_[i] = array_[i] + np.random.choice([-P, P])
     return mutatedArray_
 
 
@@ -239,13 +239,13 @@ def allNewvectors(vect_select,P):
         Returns :
             numpy.ndarray: allNewvec : 10 new vectors in a list to show to the user
         """
-    allNewvec=[]
-    newcompleteMut_=mutatesAll(vect_select,P)
-    allNewvec.append(newcompleteMut_)
-    crossedover_vec=multi_point_crossover(newcompleteMut_)
-    allNewvec.append(crossedover_vec)
+    mutated = mutatesAll(vect_select,P)
+    crossedover_vec=multi_point_crossover(mutated)
+    allNewvec = np.append(mutated, crossedover_vec, axis = 0)
 
     return allNewvec
+
+
 
 def newGeneration(population_, target, select = .5):
     """Generates a new population by performing mutations on
@@ -315,6 +315,50 @@ if __name__ == "__main__":
 
     print("\nThe new generation is then obtained by the concatenation of the complete mutated population and the crossing overs")
     print("\nNew Generation : \n", np.append(completeMutPop, crossovers, axis=0))
+
+#######################################################################
+#######################################################################
+#######################################################################
+
+    print("\n####################################")
+    print("Testing of the Genetic Algorithm : \n")
+    print("####################################\n")
+
+    N = 10
+    size = 128
+    max = 200
+    max = -200
+    gen = 200
+    arrayPop_ = generate_population(N, size)
+    arrayTarget_ = generate_array(size)
+
+#######################################################
+    def TestFunction(Pop, Target, gen, P, select):
+        costs = []
+        for i in range(gen):
+            cost = cost_population(Pop, Target)
+            costs.append(sum(cost)/len(cost))
+            Pop = select_Arrays(Pop, Target, .4)
+            Pop = allNewvectors(Pop, P)
+        return costs
+
+
+#######################################################
+
+    costs = []
+    costs1 = TestFunction(arrayPop_, arrayTarget_, gen, 2, select = 0.5)
+    costs2 = TestFunction(arrayPop_, arrayTarget_, gen, 2, select = 0.3)
+
+    t = np.arange(0, gen, 1)
+
+
+    plt.plot(t, costs1, label = "1")
+    plt.plot(t, costs2, label = "2")
+    #plt.plot(t, costs3, label = "3")
+    plt.legend(loc="upper left")
+
+    plt.ylabel('some number')
+    plt.show()
 
 
 # #############################
