@@ -208,7 +208,7 @@ def completes_mutants(vect_select,mutants_select,P):
     if S<5 :
         nb_missing_mut=5-S
         for i in range (nb_missing_mut):
-            new_mutant=array_mutation(vect_select[i],P)
+            new_mutant=array_mutation(vect_select[i%len(vect_select)],P)
             newcompleteMut_ = np.append(newcompleteMut_,[new_mutant], axis=0)
 
     elif S==5:
@@ -270,6 +270,20 @@ def newGeneration(population_, target, select = .5):
 
     return newPopulation_
 
+
+def mutationRate(vect_select):
+
+    listDiff = []
+    for vect in vect_select:
+        listDiff.append(max(vect)-min(vect))
+
+    P = sum(listDiff)/len(listDiff)
+
+    return int(P/3)
+
+
+
+
 #############################
 ########Main/Test #########
 #############################
@@ -279,13 +293,16 @@ if __name__ == "__main__":
     print("\n####################################")
     print("Testing of the Genetic Algorithm : \n")
 
-    A = [150 for i in range(10)]
-    B = [250 for i in range(10)]
-    C = [350 for i in range(10)]
-    D = [450 for i in range(10)]
-    E = [550 for i in range(10)]
+    A = [150+i for i in range(10)]
+    B = [250+i for i in range(10)]
+    C = [350+i for i in range(10)]
+    D = [450+i for i in range(10)]
+    E = [550+i for i in range(10)]
 
-    initalPop = np.array([A,B,C])
+    p = mutationRate([A,B,C])
+    print("p = ", p)
+
+    initalPop = np.array([A])
     print("Initial population : \n", initalPop)
 
     print("\nMutation on selected arrays...")
