@@ -366,8 +366,8 @@ def decoding_images(encoder, decoder, path_to_image):
     """
     image_tensor= Image_Conversion_to_tensor(path_to_image)
     X=image_tensor.reshape(1,3,128,128)
-    encoded_vector=encoder.forward(X) #, indices
-    decoded_tensor=decoder.forward(encoded_vector) #, indices
+    encoded_vector=encoder.forward(X)
+    decoded_tensor=decoder.forward(encoded_vector)
     decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,128,128))
 
     fig = plt.figure(figsize=(20,20))
@@ -405,7 +405,7 @@ def decoding_Vector_to_Image(vector, decoder):
     Returns:
         decoded_pil (PIL Image): decoded image in PIL format
     """
-    decoded_tensor=decoder.forward(torch.tensor(vector)) #, indices
+    decoded_tensor=decoder.forward(torch.tensor(vector))
     decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,128,128))
     return decoded_pil
 
@@ -414,19 +414,19 @@ if __name__ == "__main__":
 
     # TRAINING
 
-    epoch = 5
-    batch_size = 20
-    my_autoencoder=training_Saving_Autoencoder(epoch, batch_size, "models/autoencoder_18_03.pt",'few_faces',"models/decoder_18_03.pt","models/encoder_18_03.pt")
-    comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
-    comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
-    comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # epoch = 5
+    # batch_size = 20
+    # my_autoencoder=training_Saving_Autoencoder(epoch, batch_size, "models/autoencoder_18_03.pt",'few_faces',"models/decoder_18_03.pt","models/encoder_18_03.pt")
+    # comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
+    # comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
+    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING ENCODER & DECODER SEPARATELY
 
-    # loaded_decoder=load_decoder("saved16mars/saved16mars_decoder_fitted.pt")
-    # loaded_encoder=load_encoder("saved16mars/saved16mars_encoder_fitted.pt")
-    # decoding_images(loaded_decoder,loaded_encoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
-    # my_autoencoder_loaded=load("autoencoder_fitted_29faces_10epochs.pt")
+    loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
+    loaded_encoder=load_encoder("models/encoder_18_03_15epochs_256batchsize.pt")
+    decoding_images(loaded_encoder,loaded_decoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # my_autoencoder_loaded=load_autoencoder("models/autoencoder_18_03_15epochs_256batchsize.pt")
     # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING AUTOENCODER
