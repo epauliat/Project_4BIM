@@ -184,10 +184,12 @@ def list_select_mutants(vect_select,P):
         mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
     """
     mutants_select=vect_select.copy()
-
+    # print(len(mutants_select))
+    # print(mutants_select[0])
     for i in range(len(vect_select)): #for each vector of the list vect_select
         mutants_select[i]=array_mutation(vect_select[i],P) #the vector is mutated with the function array_mutation
-
+    # print(len(mutants_select))
+    # print(mutants_select[0])
     return mutants_select
 
 
@@ -226,6 +228,7 @@ def mutatesAll(vect_select,P):
             numpy.ndarray: newcompleteMut : 5 vectors mutated in a list
         """
     mutants_select=list_select_mutants(vect_select,P)
+    # print(mutants_select)
     newcompleteMut_=completes_mutants(vect_select,mutants_select,P)
 
     return newcompleteMut_

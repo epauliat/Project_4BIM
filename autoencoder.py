@@ -389,23 +389,24 @@ def encoding_Image_to_Vector(path, encoder):
         path (str): path to an image
         encoder (Encoder): encoder used
     Returns:
-        encoded_vector (Numpy Array): image encoded stored in an intermediate vector
+        encoded_vector (list): image encoded stored in an
+        intermediate vector
     """
     image_tensor= Image_Conversion_to_tensor(path)
     X=image_tensor.reshape(1,3,128,128)
     encoded_vector=encoder.forward(X)
-    encoded_vector = encoded_vector.detach().numpy()
+    encoded_vector = encoded_vector.detach().numpy()[0]
     return encoded_vector
 
 def decoding_Vector_to_Image(vector, decoder):
     """Function that decodes a vector to an image
     Args:
-        vector(Numpy Array): input encoded image as a vector
+        vector(list): input encoded image as a vector
         decoder (Decoder): decoder used
     Returns:
         decoded_pil (PIL Image): decoded image in PIL format
     """
-    decoded_tensor=decoder.forward(torch.tensor(vector))
+    decoded_tensor=decoder.forward(torch.tensor([vector]))
     decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,128,128))
     return decoded_pil
 
@@ -414,20 +415,20 @@ if __name__ == "__main__":
 
     # TRAINING
 
-    epoch = 30
-    batch_size = 256
-    my_autoencoder=training_Saving_Autoencoder(epoch, batch_size, "models/autoencoder_21_03_30epochs_256batchsize.pt",'faces',"models/decoder_21_03_30epochs_256batchsize.pt","models/encoder_21_03_30epochs_256batchsize.pt")
-    comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
-    comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
-    comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # epoch = 30
+    # batch_size = 256
+    # my_autoencoder=training_Saving_Autoencoder(epoch, batch_size, "models/autoencoder_21_03_30epochs_256batchsize.pt",'faces',"models/decoder_21_03_30epochs_256batchsize.pt","models/encoder_21_03_30epochs_256batchsize.pt")
+    # comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
+    # comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
+    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING ENCODER & DECODER SEPARATELY
 
-    # loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
-    # loaded_encoder=load_encoder("models/encoder_18_03_15epochs_256batchsize.pt")
-    # decoding_images(loaded_encoder,loaded_decoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
-    # my_autoencoder_loaded=load_autoencoder("models/autoencoder_18_03_15epochs_256batchsize.pt")
-    # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
+    loaded_encoder=load_encoder("models/encoder_18_03_15epochs_256batchsize.pt")
+    decoding_images(loaded_encoder,loaded_decoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    my_autoencoder_loaded=load_autoencoder("models/autoencoder_18_03_15epochs_256batchsize.pt")
+    comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING AUTOENCODER
 
