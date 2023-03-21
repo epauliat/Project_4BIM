@@ -148,12 +148,11 @@ class Application(Tk):
 			list : self.list_img
 		"""
 		self.list_img = []
-		#nb_faces = len([name for name in os.listdir('faces/') if os.path.isfile(os.path.join('faces/',name))])-1
+		nb_faces = 5749
 		if self.first==True: #premier tour donc on va chercher les images dans la banque 
 			for i in range(10):
-				x = random.randint(0, 10000) #pour choisir aléatoirement des images dans la banque d'image
-				#img = Image.open("faces/"+str(x)+".jpg)
-				img = Image.open("images/"+str(i)+".jpg")
+				x = random.randint(0, nb_faces) #pour choisir aléatoirement des images dans la banque d'image
+				img = Image.open("faces/"+str(x)+".jpg")
 				img.save("images/"+str(i)+".PNG")
 				self.img=Image.open("images/"+str(i)+".PNG")
 				self.resized_img = self.img.resize((190,190))
