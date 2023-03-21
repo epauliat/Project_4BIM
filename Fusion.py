@@ -2,6 +2,19 @@
 from autoencoder import *
 from geneticAlgo import *
 
+def mutation(num):
+    loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
+    loaded_encoder=load_encoder("models/encoder_18_03_15epochs_256batchsize.pt")
+    vect_select=[]
+    for i in range(num):
+        vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))
+    new_vectors=allNewvectors(vect_select,1)
+    for i, vector in enumerate(new_vectors):
+        decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
+        decoded_pil.save("images/"+str(i)+".PNG", format="png")
+
+
+
 if __name__ == "__main__":
 
     loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
