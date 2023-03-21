@@ -1,30 +1,35 @@
-lsimport numpy as np
+import numpy as np
+import random
 import matplotlib.pyplot as plt
 
 
-#############################
-######### Functions #########
-#############################
+###############################################
+################## Functions ##################
+###############################################
 
-# Random genome generation function
+############################
+# Array generation functions
+
 def generate_array(size, max = 100, min = 0):
-    """Function that generates an array of float comprised between max and min
+    """Function that generates an array of integers comprised between
+    max and min
     Args:
         size (int): the length of the array to be generated
-        max (float): Maximal value
-        min (float): Minimal value
+        max (int): Maximal value
+        min (int): Minimal value
     Returns:
         numpy.ndarray: array_
     """
     array_ = []
     for i in range(size):
-        num = int(np.random.random()*(max-min)+min)
+        num = np.random.randint(min, max) # Random integer betweeen min and max
         array_.append(num)
     return np.array(array_)
 
 
 def generate_population(N, size, max = 100, min = 0):
-    """Function that generates an array of floats comprised between max and min
+    """Function that generates apopulation of arrays of integers
+    comprised between max and min
     Args:
         N (int): Number of arrays to generate
         size (int): the length of the arrays to be generated
@@ -39,7 +44,8 @@ def generate_population(N, size, max = 100, min = 0):
 
     return np.array(population_)
 
-
+#################################################
+# Cost and selection functions (used for testing)
 
 def cost_function(array_, target):
     """Function that computes the distance between an array and a specified target array
@@ -56,12 +62,19 @@ def cost_function(array_, target):
         cost += C
     return cost
 
-
 def cost_population(arrayList_, target):
-    cost = np.zeros(len(arrayList_))
+    """Function that computes the distance between each array of arrayList_
+    and a specified target array
+    Args:
+        arrayList_ (numpy.ndarray): List of arrays to evaluate
+        target (numpy.ndarray): target array
+    Returns:
+        numpy.ndarray: costs
+    """
+    costs = np.zeros(len(arrayList_))
     for i in range(len(arrayList_)):
-        cost[i] = cost_function(arrayList_[i], target)
-    return cost
+        costs[i] = cost_function(arrayList_[i], target)
+    return costs
 
 
 def select_Arrays(arrayList, target, p = 0.5):
@@ -81,24 +94,20 @@ def select_Arrays(arrayList, target, p = 0.5):
 
     return orderedArrays[:int(len(arrayList)*p)]
 
-def array_mutation(array_, P):
-    """Function that mutates an array randomly
-    Args:
-        array_ (numpy.ndarray): The array to be mutated
-        P (float): Mutation probability
-    Returns:
-        numpy.ndarray: newArray_
-    """
-    S = len(array_)
-    newArray_ = np.copy(array_)
-    for i in range(S):
-        if np.random.random()<P:
-            newArray_[i] = array_[i] + np.random.normal(0, 2, 1)
-    return newArray_
 
+#########################
+# Crossing over functions
 
 def crossing_over(arrayList_, P):
-
+    """Function that performs crossing overs between arrays contained
+    in arrayList_. The rate of crossing over is determined by the
+    probability P.
+    Args:
+        arrayList_ (numpy.ndarray): List of arrays to modify by crossing overs
+        P (float): probability of a crossing over to occur
+    Returns:
+        numpy.ndarray: newArrayList_
+    """
     newArrayList_ = np.copy(arrayList_)
     Nb_arrays, Len_array = newArrayList_.shape
 
@@ -113,10 +122,9 @@ def crossing_over(arrayList_, P):
 
     return newArrayList_
 
-import random
-
-def coupures(size, N):
-    """Computes indexes of the cuts to be performed for the crossing-over
+def cuts(size, N):
+    """Computes indexes of the cuts to be performed for the crossing over
+    (multi_point_crossover)
     Args:
         size (int): Length of the arrays
         N (int): Number of fragments
@@ -128,66 +136,116 @@ def coupures(size, N):
     return points
 
 
-
-def multi_point_crossover(parents):
-    """Cette fonction créé une liste de vecteurs enfants en recombinant les parents avec les différents points de coupure
-
+def multi_point_crossover(arrayList_):
+    """Function that performs crossing overs between arrays contained
+    in arrayList_.
     Args:
-        parents : liste des vecteurs après mutation
+        arrayList_ (numpy.ndarray): List of arrays to modify by crossing overs
     Returns:
-        childs: un vecteur enfant de la même taille que ceux des parents
+        numpy.ndarray: newArrayList_
     """
-    n = len(parents[0])
-    points = coupures(n, 5)
+    size = len(arrayList_[0])
+    N = len(arrayList_)
+    points = cuts(size, 5)
     for i in range(len(points)):
         start = points[i]
-        childs = np.copy(parents)
-        for i in range(len(parents)):
-            childs[i][start:] = parents[i+1][start:] if i+1<len(parents) else parents[0][start:]
-        parents = childs
-    return childs
+        newArrayList_ = np.copy(arrayList_)
+        for i in range(N):
+            newArrayList_[i][start:] = arrayList_[i+1][start:] if i+1<N else arrayList_[0][start:]
+        arrayList_ = newArrayList_
+    return newArrayList_
 
 
+###################
+# Mutation function
 
-def liste_mutants_select(vect_select):
-    """renvoie la liste de tous les vecteurs mutés à partir des vecteurs séléctionnés
+def array_mutation(array_, P):
+    """Function that mutates an array randomly
     Args:
-        vect_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur dans un array (un array d'array)
-    return
-        mutants_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur mutés, dans un array (un array d'array)
+        array_ (numpy.ndarray): The array to be mutated
+        P (int): Mutation factor
+    Returns:
+        numpy.ndarray: mutatedArray_
     """
-    mutants_select=np.copy(vect_select)
-    for i in range(len(vect_select)-1): #pour chaque vecteur de mon array
-        mutants_select[i]=array_mutation(vect_select[i])
+    S = len(array_)
+    mutatedArray_ = np.copy(array_)
+    for i in range(S//2):
+        mutatedArray_[2*i] = array_[2*i] + np.random.choice([-P, P])
+    return mutatedArray_
+
+
+
+def list_select_mutants(vect_select,P):
+    """Function that mutates randomly all the vectors selected, returns all in a list
+    Args:
+        vect_select (_list_): vectors selected by the user in a list
+        P (float): Mutation factor
+    return
+        mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
+    """
+    mutants_select=vect_select.copy()
+
+    for i in range(len(vect_select)): #for each vector of the list vect_select
+        mutants_select[i]=array_mutation(vect_select[i],P) #the vector is mutated with the function array_mutation
 
     return mutants_select
 
-def mutants_complets(vect_select,mutants_select):
-    """calcule le nb mutants manquants s'il y en a et complète la liste avec d'autres mutants (on veut la taille de la liste de mutants=taille de la liste des crossover)
-        hypothèse : l'utilisateur ne peut pas sélectionner plus de la moitié des images proposées
+
+def completes_mutants(vect_select,mutants_select,P):
+    """calculate all the missing mutants to complete the list of 5 mutants (to have 5 mutants and 5 vectors by crossing-over)
+    --> the user cannot select more than 5 images (10 in total)
     Args:
-        vect_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur dans un array
-        mutants_select (_array_): les vecteurs récupérés de la sélection de l'utilisateur déjà mutés dans un array
+        vect_select (_list_): vectors selected by the user in a list
+        mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
+
     Returns:
-        numpy.ndarray: newcompleteArray_ : tous les vecteurs mutés, dans un array de 5
+        numpy.ndarray: newcompleteMut : 5 vectors mutated in a list
     """
     S=len(mutants_select)
-    #s'il y a 10 vecteurs (images affichées à l'écran) on veut 5 mutants (et 5 modif en crossingover)
-    newcompleteArray_= np.copy(mutants_select) #on copie les vecteurs déjà mutés
-    #définir newmutant qui sera un nouveau vecteur muté
-    new_mutant = np.array([]) #non mutant c'est un vecteur vec_select un vect de vect
+    #the size of mutants_select is inferior or equal to 5
+    newcompleteMut_=mutants_select.copy() #Copy of the vectors already mutated
+    new_mutant = np.array([]) #new_mutant will be a new vector mutated
     if S<5 :
-        nb_mut_manquants=5-S #10=len(vect_select) = taille de la liste des vecteurs affichés
-        for i in range (nb_mut_manquants-1):
-            new_mutant=array_mutation(vect_select[i])
-            #newcompleteArray_.append(new_mutant)
-            #t_2 = np.vstack([t_2,ajout_ligne_t_2])
-            newcompleteArray_=np.append([newcompleteArray_], [new_mutant])
+        nb_missing_mut=5-S
+        for i in range (nb_missing_mut):
+            new_mutant=array_mutation(vect_select[i%len(vect_select)],P)
+            newcompleteMut_ = np.append(newcompleteMut_,[new_mutant], axis=0)
 
     elif S==5:
-        newcompleteArray_= np.copy(mutants_select)
+        newcompleteMut_=mutants_select.copy()
 
-    return newcompleteArray_
+    return newcompleteMut_
+
+def mutatesAll(vect_select,P):
+    """_summary_ : function that returns the 5 mutated vectors in a list in once
+
+        Args:
+            vect_select (_list_): vectors selected by the user in a list
+            P (float): Mutation factor
+        Returns :
+            numpy.ndarray: newcompleteMut : 5 vectors mutated in a list
+        """
+    mutants_select=list_select_mutants(vect_select,P)
+    newcompleteMut_=completes_mutants(vect_select,mutants_select,P)
+
+    return newcompleteMut_
+
+def allNewvectors(vect_select,P):
+    """_summary_ : function that returns the 10 new vectors (5 mutated + 5 crossing over) in a list in once (using all the previous functions)
+
+        Args:
+            vect_select (_list_): vectors selected by the user in a list
+            P (float): Mutation factor
+        Returns :
+            numpy.ndarray: allNewvec : 10 new vectors in a list to show to the user
+        """
+    mutated = mutatesAll(vect_select,P)
+    crossedover_vec=multi_point_crossover(mutated)
+    allNewvec = np.append(mutated, crossedover_vec, axis = 0)
+
+    return allNewvec
+
+
 
 def newGeneration(population_, target, select = .5):
     """Generates a new population by performing mutations on
@@ -198,7 +256,9 @@ def newGeneration(population_, target, select = .5):
     Returns:
         numpy.ndarray: newPopulation_
     """
+    print(len(population_))
     population_ = select_Arrays(population_, target, select)
+    print(len(population_))
     newPopulation_ = []
 
     for array in population_:
@@ -210,83 +270,188 @@ def newGeneration(population_, target, select = .5):
 
     return newPopulation_
 
+
+def mutationRate(vect_select):
+
+    listDiff = []
+    for vect in vect_select:
+        listDiff.append(max(vect)-min(vect))
+
+    P = sum(listDiff)/len(listDiff)
+
+    return int(P/3)
+
+
+
+
 #############################
-######### Main/Test #########
+########Main/Test #########
 #############################
 
-N = 15
-size = 15
-min = 0
-max = 100
+if __name__ == "__main__":
 
-Arr = generate_array(size, max, min)
-print(Arr)
-print()
-mutArr = array_mutation(Arr, 2)
-print(mutArr)
+    print("\n####################################")
+    print("Testing of the Genetic Algorithm : \n")
 
-pop = generate_population(N, size, max, min)
-print(pop)
+    A = [150+i for i in range(10)]
+    B = [250+i for i in range(10)]
+    C = [350+i for i in range(10)]
+    D = [450+i for i in range(10)]
+    E = [550+i for i in range(10)]
 
-pop2 = newGeneration(pop, Arr)
+    p = mutationRate([A,B,C])
+    print("p = ", p)
 
+    initalPop = np.array([A])
+    print("Initial population : \n", initalPop)
 
+    print("\nMutation on selected arrays...")
 
-print()
-print("########################")
-print("########################")
+    completeMutPop = mutatesAll(initalPop, 20) #Adds mutated arrays until 5 arrays are obtained
+    print("\nComplete mutated population : \n", completeMutPop)
 
-print()
-pop = generate_population(N, size, max, min)
+    crossovers = multi_point_crossover(completeMutPop)
+    print("\nCrossovers obtained : \n", crossovers)
 
-print()
-print("target : ",Arr)
+    print("\nThe new generation is then obtained by the concatenation of the complete mutated population and the crossing overs")
+    print("\nNew Generation : \n", np.append(completeMutPop, crossovers, axis=0))
 
-means = []
-for i in range(60):
-    print()
+#######################################################################
+#######################################################################
+#######################################################################
 
-    pop = newGeneration(pop, Arr)
+    print("\n####################################")
+    print("Testing of the Genetic Algorithm : \n")
+    print("####################################\n")
 
+    N = 10
+    size = 128
+    max = 200
+    max = -200
+    gen = 200
+    arrayPop_ = generate_population(N, size)
+    arrayTarget_ = generate_array(size)
 
-    print()
-
-    print("########################")
-    print("GEN ", i)
-    print(len(pop))
-    print()
-    print("target : ",Arr)
-    m = []
-    for i in range(len(pop)):
-        m.append(cost_function(pop[i], Arr))
-    means.append(sum(m)/len(m))
-
-print("######")
-print(pop)
-print(Arr)
-print("######")
-
-print(means)
-plt.figure()
-plt.plot(np.array(means))
-plt.show()
-
-'''
-A = [f"A{i}" for i in range(10)]
-B = [f"B{i}" for i in range(10)]
-C = [f"C{i}" for i in range(10)]
-D = [f"D{i}" for i in range(10)]
-E = [f"E{i}" for i in range(10)]
-
-for i in [A,B,C,D,E]:
-    print(i)
-
-child = multi_point_crossover([A,B,C,D,E])
-for i in child:
-    print(i)
+#######################################################
+    def TestFunction(Pop, Target, gen, P, select):
+        costs = []
+        for i in range(gen):
+            cost = cost_population(Pop, Target)
+            costs.append(sum(cost)/len(cost))
+            Pop = select_Arrays(Pop, Target, .4)
+            Pop = allNewvectors(Pop, P)
+        return costs
 
 
+#######################################################
 
-print("######################")
+    costs = []
+    costs1 = TestFunction(arrayPop_, arrayTarget_, gen, 1, select = 0.5)
+    costs2 = TestFunction(arrayPop_, arrayTarget_, gen, 2, select = 0.5)
 
-'''
+    t = np.arange(0, gen, 1)
+
+
+    plt.plot(t, costs1, label = "1")
+    plt.plot(t, costs2, label = "2")
+    #plt.plot(t, costs3, label = "3")
+    plt.legend(loc="upper left")
+
+    plt.ylabel('some number')
+    plt.show()
+
+
+# #############################
+# ######### Main/Test #########
+# #############################
+
+# '''
+# N = 15
+# size = 15
+# min = 0
+# max = 100
+#
+# Arr = generate_array(size, max, min)
+# print(Arr)
+# print()
+# mutArr = array_mutation(Arr, 2)
+# print(mutArr)
+#
+# pop = generate_population(N, size, max, min)
+# print(pop)
+#
+# pop2 = newGeneration(pop, Arr)
+#
+#
+#
+# print()
+# print("########################")
+# print("########################")
+#
+# print()
+# pop = generate_population(N, size, max, min)
+#
+# print()
+# print("target : ",Arr)
+#
+# means = []
+# for i in range(60):
+#     print()
+#
+#     pop = newGeneration(pop, Arr)
+#
+#
+#     print()
+#
+#     print("########################")
+#     print("GEN ", i)
+#     print(len(pop))
+#     print()
+#     print("target : ",Arr)
+#     m = []
+#     for i in range(len(pop)):
+#         m.append(cost_function(pop[i], Arr))
+#     means.append(sum(m)/len(m))
+#
+# print("######")
+# print(pop)
+# print(Arr)
+# print("######")
+#
+# print(means)
+# plt.figure()
+# plt.plot(np.array(means))
+# plt.show()
+#
+#
+# A = [f"A{i}" for i in range(10)]
+# B = [f"B{i}" for i in range(10)]
+# C = [f"C{i}" for i in range(10)]
+# D = [f"D{i}" for i in range(10)]
+# E = [f"E{i}" for i in range(10)]
+#
+# for i in [A,B,C,D,E]:
+#     print(i)
+#
+# child = multi_point_crossover([A,B,C,D,E])
+# for i in child:
+#     print(i)
+#
+#
+#
+# print("######################")
+# '''
+# A = [10+i for i in range(10)]
+# B = [20+i for i in range(10)]
+# C = [30+i for i in range(10)]
+# #D = [f"D{i}" for i in range(10)]
+# #E = [f"E{i}" for i in range(10)]
+#
+# print([A,B,C])
+#
+# E = liste_mutants_select([A,B,C],p)
+# #print(E)
+# parents=mutants_complets([A,B,C],E)
+# print(parents)
+# print(multi_point_crossover(parents))
+#
