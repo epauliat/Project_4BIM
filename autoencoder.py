@@ -415,20 +415,24 @@ if __name__ == "__main__":
 
     # TRAINING
 
-    # epoch = 30
-    # batch_size = 256
-    # my_autoencoder=training_Saving_Autoencoder(epoch, batch_size, "models/autoencoder_21_03_30epochs_256batchsize.pt",'faces',"models/decoder_21_03_30epochs_256batchsize.pt","models/encoder_21_03_30epochs_256batchsize.pt")
+    epoch = 40
+    batch_size = 256
+    my_autoencoder=training_Saving_Autoencoder(epoch, batch_size,
+    "models/autoencoder_22_03_40epochs_256batchsize.pt",
+    'faces',
+    "models/decoder_22_03_40epochs_256batchsize.pt",
+    "models/encoder_22_03_40epochs_256batchsize.pt")
     # comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
     # comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
     # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING ENCODER & DECODER SEPARATELY
 
-    loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
-    loaded_encoder=load_encoder("models/encoder_18_03_15epochs_256batchsize.pt")
-    decoding_images(loaded_encoder,loaded_decoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
-    my_autoencoder_loaded=load_autoencoder("models/autoencoder_18_03_15epochs_256batchsize.pt")
-    comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # loaded_decoder=load_decoder("models/decoder_18_03_15epochs_256batchsize.pt")
+    # loaded_encoder=load_encoder("models/encoder_18_03_15epochs_256batchsize.pt")
+    # decoding_images(loaded_encoder,loaded_decoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # my_autoencoder_loaded=load_autoencoder("models/autoencoder_18_03_15epochs_256batchsize.pt")
+    # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING AUTOENCODER
 
