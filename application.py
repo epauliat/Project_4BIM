@@ -11,13 +11,17 @@ from tkinter import messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 import os
 import glob
-from Fusion import *
 from reportlab.pdfgen.canvas import Canvas
 from datetime import date,datetime
 
-###########################
+# Internal librairies
+
+from Fusion import *
+
+
+#####################
 # Class Application #
-###########################
+#####################
 
 class Application(Tk):
 	def __init__(self):
@@ -77,7 +81,7 @@ class Application(Tk):
 		global w_frame, lbl, tuto, lancer, e
 		w_frame = Frame(self,bg='#CAD5CA')
 		w_frame.grid(row=1,column=1, columnspan=4)
-		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\n Ce projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nNous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en violet.\n Lorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font,bg='#CAD5CA')
+		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\n Ce projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nNous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en vert foncé.\n Lorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font,bg='#CAD5CA')
 		lbl.pack(expand="True",fill=tk.X)
 
 		tuto = Button(self, text="Voir le tutoriel", bg='#daebda',command=self.tuto_window)
@@ -103,7 +107,7 @@ class Application(Tk):
 		self.canva.setFont("Times-Roman",12)
 		self.consigne_frame = Frame(self,bg='#CAD5CA',bd=8,relief='raise')
 		self.consigne_frame.grid(row=0,column=1,columnspan=5,sticky="nsew")
-		self.consigne_lbl = WrappingLabel(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour indigo",font=self.font,bg='#CAD5CA')
+		self.consigne_lbl = WrappingLabel(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour vert foncé",font=self.font,bg='#CAD5CA')
 		self.consigne_lbl.pack(expand="True",fill=tk.X)
 		self.selectedtxt_frame = Frame(self,bd=8,bg='#CAD5CA')
 		self.selectedtxt_frame.grid(row=0,column=0,sticky="nsew")
@@ -209,6 +213,12 @@ class Application(Tk):
 
 
 	def not_found(self):
+		"""Function which computes new images from the ones selected (when it is not the agressor)
+		Args:
+			None
+		Returns:
+			None
+		"""
 		files = glob.glob('temp/*')
 		for f in files:
 			os.remove(f)
@@ -230,6 +240,12 @@ class Application(Tk):
 		self.new_images()
 
 	def all_selected(self):
+		"""Function that append the list of selected images from the beginning and save them in a directory
+		Args:
+			None
+		Returns:
+			None
+		"""
 		for i in range(len(self.slt)):
 			self.inc+=1
 			self.all_slt.append(self.slt[i])
@@ -237,6 +253,12 @@ class Application(Tk):
 			picture.save('selected/'+str(self.inc)+'.PNG')
 
 	def new_images(self):
+		"""Function that load the images to be shown on the screen by assigning them to the ImButton
+		Args:
+			None
+		Returns:
+			None
+		"""
 		self.image = self.list_image()
 		self.button = []
 		for i in range(len(self.button)):
@@ -264,7 +286,6 @@ class Application(Tk):
 		"""
 		self.top_level = tk.Toplevel()
 		self.top_level.title("Tutoriel")
-
 		self.top_level.geometry(
 		    "{}x{}+{}+{}".format(int(self.winfo_screenwidth()/2), int(self.winfo_screenheight()/2), int(0), int(0)))
 		self.top_level.configure(bg='#CAD5CA')
@@ -277,8 +298,6 @@ class Application(Tk):
 			menu=file_tuto_menu,
 			underline=0)
 
-		# lbl = WrappingLabel(self.top_level,text="Tutoriel",font=self.font)
-		# lbl.pack(expand="True",fill=tk.X)
 		for i in range(9):
 			Grid.rowconfigure(self.top_level,i,weight=1)
 		Grid.columnconfigure(self.top_level,0,weight=1)
@@ -318,20 +337,36 @@ class Application(Tk):
 		btn_quit=Button(self.top_level, text="Fermé le tutoriel", command=self.top_level.destroy,bg='#daebda')
 		btn_quit.grid(row=8,column=0,sticky="e")
 
+##################
+# Class ImButton #
+##################
 
 class ImButton(tk.Button):
     def __init__(self, parent, pilimage, image, *args, **kvargs):
+    	"""Type of Button which has a Pillow Image and an Image as attribute
+	    Args:
+	    	None
+	    Returns:
+	    	None
+	    """
     	self.pilimage = pilimage
     	self.image = image
     	super().__init__(parent, *args, image=self.pilimage, **kvargs)
 
+#######################
+# Class WrappingLabel #
+#######################
 
 class WrappingLabel(tk.Label):
-    '''a type of Label that automatically adjusts the wrap to the size'''
     def __init__(self, master=None, **kwargs):
-        tk.Label.__init__(self, master, **kwargs)
-        self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
-
+    	"""Type of Label that ajust to the window size
+    	Args:
+    		None
+    	Returns:
+    		None
+    	"""
+    	tk.Label.__init__(self, master, **kwargs)
+    	self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
 
 
 ################
