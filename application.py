@@ -16,7 +16,9 @@ from datetime import date,datetime
 
 # Internal librairies
 
-from Fusion import *
+from autoencoder import *
+from geneticAlgo import *
+
 
 
 #####################
@@ -225,7 +227,7 @@ class Application(Tk):
 		for i in range(len(self.slt)):
 			picture = self.slt[i].image
 			picture.save('temp/'+str(i)+'.jpg')
-		mutation(len(self.slt))
+		self.mutation(len(self.slt))
 		self.all_selected()
 		self.text = ScrolledText(self.selected_frame, wrap=WORD, width=30, height=45,bg='#CAD5CA')
 		self.text.grid(row=2,column=0)
@@ -275,6 +277,24 @@ class Application(Tk):
 				self.button[i].grid(row=2,column=j+1,sticky="nsew")
 		self.label_tour = WrappingLabel(self.frame_tour,text="Vous êtes au tour "+str(self.tour)+" sur 15",font=self.font,bg='#CAD5CA')
 		self.label_tour.pack(expand="True",fill=tk.X)
+
+
+	def mutation(self,num):
+		"""Function that load the autoencoder and do the mutation on the selected images
+		Args:
+			num (int) : number of selected images
+		Returns:
+			None
+		"""
+		loaded_decoder=load_decoder("models/decoder_22_03_30epoch_256batchsize.pt")
+		loaded_encoder=load_encoder("models/encoder_22_03_30epoch_256batchsize.pt")
+		vect_select=[]
+		for i in range(num):
+		    vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))
+		new_vectors=allNewvectors(vect_select,1)
+		for i, vector in enumerate(new_vectors):
+		    decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
+		    decoded_pil.save("images/"+str(i)+".PNG", format="png")
 
 
 	def tuto_window(self):
