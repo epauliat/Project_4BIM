@@ -28,10 +28,10 @@ from geneticAlgo import *
 class Application(Tk):
 	def __init__(self):
 		"""Function that initializes the template for the window application
-		Args: 
-			None
-		Return: 
-			None
+			Args: 
+				None
+			Returns: 
+				None
 		"""
 		super().__init__()
 		self.title("Application")
@@ -64,10 +64,10 @@ class Application(Tk):
 
 	def restart(self):
 		"""Function that allows us to restart our application
-		Args:
-			None
-		Return:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		self.destroy()
 		self.__init__()
@@ -75,10 +75,10 @@ class Application(Tk):
 
 	def first_window(self):
 		"""Function that creates the first window that shows up when the user start the program. It presents the project and asks one primilary question
-		Args: 
-			None
-		Return:
-			None
+			Args: 
+				None
+			Returns:
+				None
 		"""
 		global w_frame, lbl, tuto, lancer, e
 		w_frame = Frame(self,bg='#CAD5CA')
@@ -95,10 +95,10 @@ class Application(Tk):
 
 	def simulation(self):
 		"""Function that creates the choices page where the victim will be presented a number of pictures from which they will have to choose the ones that match the best their attacker
-		Args:
-			None
-		Return:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		w_frame.destroy()
 		lbl.destroy()
@@ -128,10 +128,10 @@ class Application(Tk):
 
 	def list_image(self):
 		"""Function that get the list of image that will be presented to the victim at each iteration
-		Args:
-			None
-		Return:
-			list : self.list_img
+			Args:
+				None
+			Returns:
+				array (self.list_img) : array of images to show
 		"""
 		self.list_img = []
 		nb_faces = 5749
@@ -153,10 +153,10 @@ class Application(Tk):
 
 	def selected(self,btn):
 		"""Function that enables us to highlight the pictures that the user clicked on
-		Args:
-			btn (Button) : the button the user cliked on
-		Return:
-			None
+			Args:
+				btn (ImButton) : the button the user cliked on
+			Returns:
+				None
 		"""
 		if btn.cget('bg')!='#5a6650':
 			btn.config(bg='#5a6650')
@@ -167,10 +167,10 @@ class Application(Tk):
 
 	def ia(self):
 		"""Function that is called when we decide that we ended our selection, according to the number of pictures we choose it will either end the process, continue or will ask for another number of images choosen
-		Args:
-			None
-		Return:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		if self.tour<15:
 			if len(self.slt)<2:
@@ -216,10 +216,10 @@ class Application(Tk):
 
 	def not_found(self):
 		"""Function which computes new images from the ones selected (when it is not the agressor)
-		Args:
-			None
-		Returns:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		files = glob.glob('temp/*')
 		for f in files:
@@ -243,10 +243,10 @@ class Application(Tk):
 
 	def all_selected(self):
 		"""Function that append the list of selected images from the beginning and save them in a directory
-		Args:
-			None
-		Returns:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		for i in range(len(self.slt)):
 			self.inc+=1
@@ -256,10 +256,10 @@ class Application(Tk):
 
 	def new_images(self):
 		"""Function that load the images to be shown on the screen by assigning them to the ImButton
-		Args:
-			None
-		Returns:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		self.image = self.list_image()
 		self.button = []
@@ -281,10 +281,10 @@ class Application(Tk):
 
 	def mutation(self,num):
 		"""Function that load the autoencoder and do the mutation on the selected images
-		Args:
-			num (int) : number of selected images
-		Returns:
-			None
+			Args:
+				num (int) : number of selected images
+			Returns:
+				None
 		"""
 		loaded_decoder=load_decoder("models/decoder_22_03_30epoch_256batchsize.pt")
 		loaded_encoder=load_encoder("models/encoder_22_03_30epoch_256batchsize.pt")
@@ -299,10 +299,10 @@ class Application(Tk):
 
 	def tuto_window(self):
 		"""Function that creates a Toplevel windown to show a tutoriel of our application
-		Args:
-			None
-		Return:
-			None
+			Args:
+				None
+			Returns:
+				None
 		"""
 		self.top_level = tk.Toplevel()
 		self.top_level.title("Tutoriel")
@@ -364,10 +364,10 @@ class Application(Tk):
 class ImButton(tk.Button):
     def __init__(self, parent, pilimage, image, *args, **kvargs):
     	"""Type of Button which has a Pillow Image and an Image as attribute
-	    Args:
-	    	None
-	    Returns:
-	    	None
+		    Args:
+		    	None
+		    Returns:
+		    	None
 	    """
     	self.pilimage = pilimage
     	self.image = image
@@ -380,10 +380,10 @@ class ImButton(tk.Button):
 class WrappingLabel(tk.Label):
     def __init__(self, master=None, **kwargs):
     	"""Type of Label that ajust to the window size
-    	Args:
-    		None
-    	Returns:
-    		None
+	    	Args:
+	    		None
+	    	Returns:
+	    		None
     	"""
     	tk.Label.__init__(self, master, **kwargs)
     	self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
