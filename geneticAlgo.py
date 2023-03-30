@@ -169,8 +169,8 @@ def array_mutation(array_, P):
     """
     S = len(array_)
     mutatedArray_ = np.copy(array_)
-    for i in range(S):
-        mutatedArray_[i] = array_[i] + np.random.choice([-P, P])
+    for i in range(S//2):
+        mutatedArray_[2*i] = array_[2*i] + np.random.choice([-P, P])
     return mutatedArray_
 
 
@@ -184,10 +184,12 @@ def list_select_mutants(vect_select,P):
         mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
     """
     mutants_select=vect_select.copy()
-
+    # print(len(mutants_select))
+    # print(mutants_select[0])
     for i in range(len(vect_select)): #for each vector of the list vect_select
         mutants_select[i]=array_mutation(vect_select[i],P) #the vector is mutated with the function array_mutation
-
+    # print(len(mutants_select))
+    # print(mutants_select[0])
     return mutants_select
 
 
@@ -226,6 +228,7 @@ def mutatesAll(vect_select,P):
             numpy.ndarray: newcompleteMut : 5 vectors mutated in a list
         """
     mutants_select=list_select_mutants(vect_select,P)
+    # print(mutants_select)
     newcompleteMut_=completes_mutants(vect_select,mutants_select,P)
 
     return newcompleteMut_
@@ -346,8 +349,8 @@ if __name__ == "__main__":
 #######################################################
 
     costs = []
-    costs1 = TestFunction(arrayPop_, arrayTarget_, gen, 2, select = 0.5)
-    costs2 = TestFunction(arrayPop_, arrayTarget_, gen, 2, select = 0.3)
+    costs1 = TestFunction(arrayPop_, arrayTarget_, gen, 1, select = 0.5)
+    costs2 = TestFunction(arrayPop_, arrayTarget_, gen, 2, select = 0.5)
 
     t = np.arange(0, gen, 1)
 
