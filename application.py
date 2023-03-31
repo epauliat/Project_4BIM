@@ -16,7 +16,7 @@ from datetime import date,datetime
 
 # Internal librairies
 
-from autoencoder import *
+from autoencoder_deployment import *
 from geneticAlgo import *
 
 
@@ -127,26 +127,39 @@ class Application(Tk):
 
 
 	def list_image(self):
-		"""Function that get the list of image that will be presented to the victim at each iteration
+		"""Function that gets the list of image that will be presented to the victim at each iteration
 			Args:
 				None
 			Returns:
 				array (self.list_img) : array of images to show
 		"""
 		self.list_img = []
-		nb_faces = 5749
+		nb_faces = 999
 		if self.first==True: 
 			for i in range(10):
 				x = random.randint(0, nb_faces)
-				img = Image.open("faces/"+str(x)+".jpg")
+				img = Image.open("faces/"+str(x)+".png")
 				img.save("images/"+str(i)+".PNG")
 				self.img=Image.open("images/"+str(i)+".PNG")
 				self.resized_img = self.img.resize((190,190))
 				self.list_img.append(self.resized_img)
 			self.first=False
 		else:
-			for i in range(10):
-				self.img = Image.open("images/"+str(i)+".PNG")
+			ran = []
+			for i in range(5):
+				x = random.randint(0,9)
+				while (x in ran):
+					x = random.randint(0,9)
+				print(x)
+				ran.append(x)
+				self.img = Image.open("images/"+str(x)+".PNG")
+				self.resized_img = self.img.resize((190,190))
+				self.list_img.append(self.resized_img)
+			for i in range(5,10):
+				x = random.randint(0, nb_faces)
+				img = Image.open("faces/"+str(x)+".png")
+				img.save("images/"+str(i)+".PNG")
+				self.img=Image.open("images/"+str(i)+".PNG")
 				self.resized_img = self.img.resize((190,190))
 				self.list_img.append(self.resized_img)
 		return self.list_img
@@ -204,12 +217,6 @@ class Application(Tk):
 				self.not_found()
 		else:
 			self.all_selected()
-			#self.canva.drawString(50,830,"Rapport de l'utilisation de l'intelligence artificielle dans le but de créer un portrait robot de l'agresseur.")
-			#self.canva.drawString(50,810,str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" (UTC+1)"))
-			#for i in range(len(self.all_slt)):
-				#self.canva.drawString(50, 790,str(i)+'ème itération:')
-				#self.canva.drawImage("selected/"+str(i)+'.PNG',50,780)
-			#self.canva.save()
 			messagebox.showinfo("Message de fin","Vous n'avez pas trouvé de portrait correspondant à votre agresseur dans le nombre d'itération autorisé. Les photos que vous aviez selectionnées sont enregistrées dans le dossier (selected). Merci pour votre collaboration.")
 			self.destroy()
 
@@ -227,7 +234,7 @@ class Application(Tk):
 		for i in range(len(self.slt)):
 			picture = self.slt[i].image
 			picture.save('temp/'+str(i)+'.jpg')
-		self.mutation(len(self.slt))
+		self.mutating(len(self.slt),1.5,"stds_of_all_encoded_vector_per_position.txt")
 		self.all_selected()
 		self.text = ScrolledText(self.selected_frame, wrap=WORD, width=30, height=45,bg='#CAD5CA')
 		self.text.grid(row=2,column=0)
@@ -242,7 +249,7 @@ class Application(Tk):
 		self.new_images()
 
 	def all_selected(self):
-		"""Function that append the list of selected images from the beginning and save them in a directory
+		"""Function that appends the list of selected images from the beginning and save them in a directory
 			Args:
 				None
 			Returns:
@@ -255,7 +262,7 @@ class Application(Tk):
 			picture.save('selected/'+str(self.inc)+'.PNG')
 
 	def new_images(self):
-		"""Function that load the images to be shown on the screen by assigning them to the ImButton
+		"""Function that loads the images to be shown on the screen by assigning them to the ImButton
 			Args:
 				None
 			Returns:
@@ -279,22 +286,30 @@ class Application(Tk):
 		self.label_tour.pack(expand="True",fill=tk.X)
 
 
-	def mutation(self,num):
-		"""Function that load the autoencoder and do the mutation on the selected images
+	def mutating(self,num, probability, std_file_path):
+		"""Function that mutates the encoded images and prints them
 			Args:
 				num (int) : number of selected images
+			    probability (float): probability used for mutations
+			    std_file_path (str): path to the std txt file
 			Returns:
-				None
+			    None
 		"""
-		loaded_decoder=load_decoder("models/decoder_22_03_30epoch_256batchsize.pt")
-		loaded_encoder=load_encoder("models/encoder_22_03_30epoch_256batchsize.pt")
+		loaded_decoder=load_decoder("models/decoder.pt")
+		loaded_encoder=load_encoder("models/encoder.pt")
+		std = []
+		with open(std_file_path) as f:
+			std = f.readlines()
+		stds = std[0].split(' ')
+		for i in range(len(stds)):
+			stds[i]=float(stds[i])
 		vect_select=[]
 		for i in range(num):
-		    vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))
-		new_vectors=allNewvectors(vect_select,1)
+			vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))
+		new_vectors=allNewvectors(vect_select,probability,stds)
 		for i, vector in enumerate(new_vectors):
-		    decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
-		    decoded_pil.save("images/"+str(i)+".PNG", format="png")
+			decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
+			decoded_pil.save("images/"+str(i)+".PNG", format="png")
 
 
 	def tuto_window(self):
