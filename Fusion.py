@@ -1,10 +1,11 @@
 from autoencoder import *
 from geneticAlgo import *
 
-def mutating(encoded_vectors,std_file_path, show):
+def mutating(encoded_vectors, probability, std_file_path, show):
     """Functions that mutates the encoded images and prints them
         Args:
             encoded_vectors (list): list of encoded vectors to be mutated
+            probability (float): probability used for mutations
             std_file_path (str): path to the std txt file
             show (boolean): if True, mutated vectors are shown in a pop-up
         Returns:
@@ -23,7 +24,7 @@ def mutating(encoded_vectors,std_file_path, show):
 
     # MUTATING ENCODED VECTORS
 
-    new_vectors=allNewvectors(vect_select,1.6,stds)
+    new_vectors=allNewvectors(vect_select,probability,stds)
 
     # PLOTTING MUTATED SOLUTIONS
 
@@ -71,4 +72,4 @@ if __name__ == "__main__":
     plt.show()
 
 
-    mutating(vect_select,"stds_of_all_encoded_vector_per_position.txt", show=True)
+    mutating(vect_select,1.5,"stds_of_all_encoded_vector_per_position.txt", show=True)
