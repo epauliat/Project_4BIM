@@ -50,6 +50,7 @@ from torchvision import transforms, datasets
 
 def Image_Conversion_to_tensor(path):
     """Function that converts an imported image in PIL format to a Tensor
+
         Args:
             path (str): image path from a given directory
         Returns:
@@ -70,6 +71,7 @@ def Image_Conversion_to_tensor(path):
 class Encoder(nn.Module):
     def __init__(self):
         """Encoder constructor for input tensor of size 3x64x64
+
             Args:
                 None
             Returns:
@@ -92,6 +94,7 @@ class Encoder(nn.Module):
 
     def forward(self, input):
         """Function that encodes an image tensor
+
             Args:
                 input (tensor): the input image tensor of size 3x64x64
             Returns:
@@ -116,6 +119,7 @@ class Encoder(nn.Module):
 class Decoder(nn.Module):
     def __init__(self):
         """Decoder constructor for input encoded tensor of size 1x64
+
             Args:
                 None
             Returns:
@@ -137,7 +141,8 @@ class Decoder(nn.Module):
 
     def forward(self, input):
         """Function that decodes an encoded image tensor
-            # Args:
+
+            Args:
                 input (tensor): encoded image tensor of size 1x64
             Returns:
                 decoded: the image tensor after being decoded of size 3x64x64
@@ -154,8 +159,8 @@ class Decoder(nn.Module):
 
 class Autoencoder(nn.Module):
     def __init__(self):
-        """Autoencoder constructor that encodes and decodes an input image of
-        size 3x64x64 to a tensor of size 1x64
+        """Autoencoder constructor that encodes and decodes an input image of size 3x64x64 to a tensor of size 1x64
+
             Args:
                 None
             Returns:
@@ -167,6 +172,7 @@ class Autoencoder(nn.Module):
 
     def forward(self, input):
         """Function that encodes an image, then decodes it
+
             Args:
                 input (tensor): image tensor of size 3x64x64
             Returns:
@@ -298,6 +304,7 @@ class Autoencoder(nn.Module):
 
 def load_autoencoder(path):
     """Function that loads an Autoencoder model from a given file
+
         Args:
             path (str): the path of the file in which the Autoencoder is saved
         Returns:
@@ -310,6 +317,7 @@ def load_autoencoder(path):
 
 def load_decoder(path):
     """Function that loads a Decoder from a given file
+
         Args:
             path (str): the path of the file in which the Decoder is saved
         Returns:
@@ -322,6 +330,7 @@ def load_decoder(path):
 
 def load_encoder(path):
     """Function that loads a Encoder from a given file
+
         Args:
             path (str): the path of the file in which the Encoder is saved
         Returns:
@@ -373,7 +382,9 @@ def load_encoder(path):
 
 def comparing_images(autoencoder, path_to_image):
     """Function that shows 2 images: the original one and the recomposed one
+
     /!\ from an Autoencoder model /!\
+
         Args:
             autoencoder (Autoencoder): the autoencoder used
             path_to_image (str): the path we want to load the image from
@@ -393,7 +404,9 @@ def comparing_images(autoencoder, path_to_image):
 
 def decoding_images(encoder, decoder, path_to_image):
     """Function that shows 2 images: the original one and the recomposed one
+
     /!\ from an encoder and a decoder /!\
+
         Args:
             encoder (Encoder): the encoder used
             decoder (Decoder): the decoder used
@@ -423,6 +436,7 @@ def decoding_images(encoder, decoder, path_to_image):
 
 def encoding_Image_to_Vector(path, encoder):
     """Function that encodes an image to a vector
+
         Args:
             path (str): path to an image
             encoder (Encoder): encoder used
@@ -436,8 +450,8 @@ def encoding_Image_to_Vector(path, encoder):
     return encoded_vector
 
 def compute_Std_Per_Position_In_Encoded_Vectors(encoder, file_path):
-    """Function that computes and saves to txt files the mean and std of the
-     values of all_encoded vector from all images of our dataset per position.
+    """Function that computes and saves to txt files the mean and std of the values of all_encoded vector from all images of our dataset per position.
+
         Args:
             encoder(Encoder): trained encoder
             file_path (str): path to the images directory
@@ -476,6 +490,7 @@ def compute_Std_Per_Position_In_Encoded_Vectors(encoder, file_path):
 
 def decoding_Vector_to_Image(vector, decoder):
     """Function that decodes a vector to an image
+    
         Args:
             vector(Numpy Array): input encoded image as a vector
             decoder (Decoder): decoder used
