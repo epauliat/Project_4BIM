@@ -102,17 +102,11 @@ class Encoder(nn.Module):
         # print(input.size())
         encoded = self.encoder_Conv2d_ReLU_1(input)
         # print(encoded.size())
-        # encoded = self.encoder_MaxPool2d(encoded)
-        # print(encoded.size())
         encoded = self.encoder_Conv2d_ReLU_2(encoded)
         # print(encoded.size())
         encoded = self.encoder_MaxPool2d(encoded)
         # print(encoded.size())
         encoded = self.BatchNormalization(encoded)
-        # print(encoded.size())
-        # encoded = self.encoder_Conv2d_ReLU_2(encoded)
-        # print(encoded.size())
-        #encoded = self.encoder_MaxPool2d(encoded)
         # print(encoded.size())
         encoded = self.encoder_Flatten(encoded)
         # print("after flatten",encoded.size())
@@ -154,10 +148,6 @@ class Decoder(nn.Module):
         # print(decoded.size())
         decoded = self.decoder_Unflatten(decoded)
         # print("after unflatten",decoded.size())
-        # decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
-        # print(decoded.size())
-        # decoded = self.BatchNormalization(decoded)
-        # print(decoded.size())
         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
         # print(decoded.size())
         decoded = self.decoder_ReLu_ConvTranspose2d_1(decoded)
@@ -218,7 +208,7 @@ def train(nb_epoch, train_data, valid_data, autoencoder):
         train_loss = 0
         print("Training")
         for (index,batch) in enumerate(train_data):
-            print("batch ", index, "/",nb_train_batch)
+            print("batch ", index, "/",nb_train_batch, end=', ')
             l = 0
             for j in range(len(batch[0])):
                 img=batch[0][j]
@@ -239,7 +229,7 @@ def train(nb_epoch, train_data, valid_data, autoencoder):
         with torch.no_grad():
             print("Validation")
             for (index,batch) in enumerate(valid_data):
-                print("batch ", index, "/",nb_valid_batch)
+                print("batch ", index, "/",nb_valid_batch, end=', ')
                 l = 0
                 for j in range(len(batch[0])):
                     img=batch[0][j]
@@ -254,8 +244,6 @@ def train(nb_epoch, train_data, valid_data, autoencoder):
 
         toc = time.time()
         print(f"Epoch {epoch}/{nb_epoch}: training loss = {train_losses[-1]:.5f}, val loss={valid_losses[-1] :.5f}, Training time : {toc-tic:.2f} s")
-        #print(f'__________Epoch:{epoch+1}, Loss:{train_loss.item():.4f}, Training time : {toc-tic:.2f} s')
-
 
     return train_losses,valid_losses
 
@@ -418,6 +406,7 @@ def decoding_images(encoder, decoder, path_to_image):
     image_tensor= Image_Conversion_to_tensor(path_to_image)
     X=image_tensor.reshape(1,3,64,64)
     encoded_vector=encoder.forward(X)
+    # print(encoded_vector)
     decoded_tensor=decoder.forward(encoded_vector)
     decoded_pil=transforms.functional.to_pil_image(decoded_tensor.reshape(3,64,64))
 
@@ -448,24 +437,29 @@ def encoding_Image_to_Vector(path, encoder):
     encoded_vector = encoded_vector.detach().numpy()
     return encoded_vector
 
-def compute_Mean_Std_Per_Position_In_Encoded_Vectors(encoder):
+def compute_Std_Per_Position_In_Encoded_Vectors(encoder, file_path):
     """Function that computes and saves to txt files the mean and std of the
      values of all_encoded vector from all images of our dataset per position.
         Args:
             encoder(Encoder): trained encoder
+            file_path (str): path to the images directory
         Returns:
             None
     """
+    print("-- Std Computation --")
+
     list_encoded_vectors = []
 
-    files = os.listdir('faces')
+    print("Going through all the files ...")
+
+    files = os.listdir(file_path)
     for name in files:
-        picture = os.listdir('faces/'+name)
+        picture = os.listdir(file_path+'/'+name)
         for p in picture:
-            path = 'faces/'+name+"/"+p
+            path = file_path+'/'+name+"/"+p
             list_encoded_vectors.append(encoding_Image_to_Vector(path,encoder))
 
-    print("VECTORS ENCODED")
+    print("All vectors encoded, computing std per position ... ")
 
     means = []
     stds = []
@@ -478,7 +472,9 @@ def compute_Mean_Std_Per_Position_In_Encoded_Vectors(encoder):
         stds.append(np.std(all_values,axis=0))
 
     np.savetxt("means_of_all_encoded_vector_per_position.txt", means)
+    print("Stds saved in means_of_all_encoded_vector_per_position.txt file")
     np.savetxt("stds_of_all_encoded_vector_per_position.txt", stds)
+    print("Stds saved in stds_of_all_encoded_vector_per_position.txt file")
 
 def decoding_Vector_to_Image(vector, decoder):
     """Function that decodes a vector to an image
@@ -496,42 +492,38 @@ def decoding_Vector_to_Image(vector, decoder):
 if __name__ == "__main__":
 
     # TRAINING
-    #
-    epoch = 18
-    batch_size = 16
-    my_autoencoder = training_Saving_Autoencoder(epoch,
-                                                batch_size,
-                                                'faces_bis',
-                                                "models/BIS7000autoencoder_31_03_18poch_16batchsize_64size_stride_padding.pt",
-                                                "models/BIS70000decoder_31_03_18epoch_16batchsize_64size_stride_padding.pt",
-                                                "models/BIS70000encoder_31_03_18epoch_16batchsize_64size_stride_padding.pt")
-    comparing_images(my_autoencoder,"faces_bis/00000/00000.png")
-    comparing_images(my_autoencoder,"faces_bis/00000/00011.png")
-    comparing_images(my_autoencoder,"faces_bis/00000/00020.png")
+    a = 1
+    # epoch = 1
+    # batch_size = 16
+    # my_autoencoder = training_Saving_Autoencoder(epoch,
+    #                                             batch_size,
+    #                                             'faces_bis',
+    #                                             "models/Autoencoder"+str(epoch)+"epochs_"+str(batch_size)+"batchsize.pt",
+    #                                             "models/Decoder"+str(epoch)+"epochs_"+str(batch_size)+"batchsize.pt",
+    #                                             "models/Encoder"+str(epoch)+"epochs_"+str(batch_size)+"batchsize.pt")
+    # comparing_images(my_autoencoder,"faces_bis/00000/00002.png")
+    # comparing_images(my_autoencoder,"faces_bis/00000/00011.png")
+    # comparing_images(my_autoencoder,"faces_bis/00000/00020.png")
 
-    # comparing_images(my_autoencoder,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
-    # comparing_images(my_autoencoder,"faces/Adam_Ant/Adam_Ant_0001.jpg")
-    # comparing_images(my_autoencoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
 
     # LOADING ENCODER & DECODER SEPARATELY
-    #
-    # loaded_decoder=load_decoder("models/decoder_27_03_40epoch_32batchsize_64size.pt")
-    # loaded_encoder=load_encoder("models/encoder_27_03_40epoch_32batchsize_64size.pt")
-    # compute_Mean_Std_Per_Position_In_Encoded_Vectors(loaded_encoder)
 
-    # decoding_images(loaded_encoder,loaded_decoder,"faces/Afton_Smith/Afton_Smith_0001.jpg")
-    # my_autoencoder_loaded=load_autoencoder("models/BIS7000autoencoder_31_03_12poch_16batchsize_64size_stride_padding.pt")
-    # comparing_images(my_autoencoder_loaded,"faces_bis/00000/00000.png")
-    # comparing_images(my_autoencoder_loaded,"faces_bis/00000/00011.png")
-    # comparing_images(my_autoencoder_loaded,"faces_bis/00000/00020.png")
-    # comparing_images(my_autoencoder_loaded,"faces_bis/00000/00065.png")
-    # comparing_images(my_autoencoder_loaded,"faces_bis/00000/00091.png")
-    # comparing_images(my_autoencoder_loaded,"faces_bis/00000/00078.png")
-    # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # loaded_decoder=load_decoder("models/BIS70000decoder_31_03_12epoch_16batchsize_64size_stride_padding.pt")
+    # loaded_encoder=load_encoder("models/3.pt")
+
+    # decoding_images(loaded_encoder,loaded_decoder,"faces_bis/00000/00002.png")
+    # decoding_images(loaded_encoder,loaded_decoder,"faces_bis/00000/00011.png")
+    # decoding_images(loaded_encoder,loaded_decoder,"faces_bis/00000/00020.png")
+
 
     # LOADING AUTOENCODER
 
-    # my_autoencoder_loaded=load_autoencoder("models/autoencoder_27_03_1epoch_32batchsize.pt")
-    # comparing_images(my_autoencoder_loaded,"few_faces/Adam_Ant/Adam_Ant_0001.jpg")
-    # comparing_images(my_autoencoder_loaded,"few_faces/Aaron_Patterson/Aaron_Patterson_0001.jpg")
-    # comparing_images(my_autoencoder_loaded,"faces/Afton_Smith/Afton_Smith_0001.jpg")
+    # my_autoencoder_loaded=load_autoencoder("models/BIS7000autoencoder_31_03_12epoch_16batchsize_64size_stride_padding.pt")
+    # comparing_images(my_autoencoder,"faces_bis/00000/00002.png")
+    # comparing_images(my_autoencoder,"faces_bis/00000/00011.png")
+    # comparing_images(my_autoencoder,"faces_bis/00000/00020.png")
+
+
+    # COMPUTING STD OF ENCODED VECTORS
+
+    # compute_Std_Per_Position_In_Encoded_Vectors(loaded_encoder, 'faces_bis')
