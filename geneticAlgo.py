@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 def generate_array(size, max = 100, min = 0):
     """Function that generates an array of integers comprised between
     max and min
-        Args:
-            size (int): the length of the array to be generated
-            max (int): Maximal value
-            min (int): Minimal value
-        Returns:
-            numpy.ndarray
+    Args:
+        size (int): the length of the array to be generated
+        max (int): Maximal value
+        min (int): Minimal value
+    Returns:
+        numpy.ndarray: array_
     """
     array_ = []
     for i in range(size):
@@ -28,15 +28,15 @@ def generate_array(size, max = 100, min = 0):
 
 
 def generate_population(N, size, max = 100, min = 0):
-    """Function that generates a population of arrays of integers
+    """Function that generates apopulation of arrays of integers
     comprised between max and min
-        Args:
-            N (int): Number of arrays to generate
-            size (int): the length of the arrays to be generated
-            max (int): Maximal value
-            min (int): Minimal value
-        Returns:
-            numpy.ndarray
+    Args:
+        N (int): Number of arrays to generate
+        size (int): the length of the arrays to be generated
+        max (int): Maximal value
+        min (int): Minimal value
+    Returns:
+        numpy.ndarray: population_
     """
     population_ = []
     for i in range(N):
@@ -65,11 +65,11 @@ def cost_function(array_, target):
 def cost_population(arrayList_, target):
     """Function that computes the distance between each array of arrayList_
     and a specified target array
-        Args:
-            arrayList_ (numpy.ndarray): List of arrays to evaluate
-            target (numpy.ndarray): target array
-        Returns:
-            numpy.ndarray
+    Args:
+        arrayList_ (numpy.ndarray): List of arrays to evaluate
+        target (numpy.ndarray): target array
+    Returns:
+        numpy.ndarray: costs
     """
     costs = np.zeros(len(arrayList_))
     for i in range(len(arrayList_)):
@@ -93,6 +93,7 @@ def select_Arrays(arrayList, target, p = 0.5):
     orderedArrays = arrayList[idx]
 
     return orderedArrays[:int(len(arrayList)*p)]
+
 
 #########################
 # Crossing over functions
@@ -155,6 +156,8 @@ def multi_point_crossover(arrayList_):
     return newArrayList_
 
 
+###################
+# Mutation function
 
 ###################
 # Mutation function

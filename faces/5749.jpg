@@ -1,0 +1,7 @@
+i=0
+for entry in *;
+do
+	mv $entry $i.jpg
+	((i=i+1))
+done
+	
