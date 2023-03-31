@@ -34,7 +34,7 @@ def mutating(encoded_vectors, probability, std_file_path, show=False):
         decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
         ax.imshow(decoded_pil)
         decoded_pil.save(str(i)+".png", format="png")
-    if(show=True):
+    if(show==True):
         plt.show()
 
     return new_vectors
