@@ -1,7 +1,7 @@
 from autoencoder import *
 from geneticAlgo import *
 
-def mutating(encoded_vectors, probability, std_file_path, show):
+def mutating(encoded_vectors, probability, std_file_path, show=False):
     """Functions that mutates the encoded images and prints them
         Args:
             encoded_vectors (list): list of encoded vectors to be mutated
@@ -28,16 +28,18 @@ def mutating(encoded_vectors, probability, std_file_path, show):
 
     # PLOTTING MUTATED SOLUTIONS
 
-    if(show == True):
-        fig = plt.figure(figsize=(100,100))
-        for i, vector in enumerate(new_vectors):
-            ax = fig.add_subplot(1,10,i+1)
-            decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
-            ax.imshow(decoded_pil)
-            decoded_pil.save(str(i)+".png", format="png")
+    fig = plt.figure(figsize=(100,100))
+    for i, vector in enumerate(new_vectors):
+        ax = fig.add_subplot(1,10,i+1)
+        decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
+        ax.imshow(decoded_pil)
+        decoded_pil.save(str(i)+".png", format="png")
+    if(show=True):
         plt.show()
 
     return new_vectors
+
+
 
 
 if __name__ == "__main__":
