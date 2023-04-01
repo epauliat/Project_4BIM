@@ -174,7 +174,7 @@ def array_mutation(array_, P, std):
     mutatedArray_ = np.copy(array_)
     for i in range(S):
         if std[i] != 0:
-          mutatedArray_[i] = array_[i] + np.random.choice([-P*std[i], P*std[i]])
+            mutatedArray_[i] = array_[i] + np.random.choice([-P*std[i], P*std[i]])
 
     return mutatedArray_
 
@@ -189,10 +189,8 @@ def list_select_mutants(vect_select,P, std):
         mutants_select (_list_): vectors mutated in a list (from the list of vectos selected by the user)
     """
     mutants_select=vect_select.copy()
-
     for i in range(len(vect_select)): #for each vector of the list vect_select
         mutants_select[i]=array_mutation(vect_select[i],P, std) #the vector is mutated with the function array_mutation
-
     return mutants_select
 
 
@@ -218,7 +216,6 @@ def completes_mutants(vect_select,mutants_select,P, std):
 
     elif S==5:
         newcompleteMut_=mutants_select.copy()
-
     return newcompleteMut_
 
 def mutatesAll(vect_select,P, std):
@@ -232,7 +229,6 @@ def mutatesAll(vect_select,P, std):
         """
     mutants_select=list_select_mutants(vect_select,P, std)
     newcompleteMut_=completes_mutants(vect_select,mutants_select,P, std)
-
     return newcompleteMut_
 
 def allNewvectors(vect_select,P,std):

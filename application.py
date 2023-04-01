@@ -150,7 +150,6 @@ class Application(Tk):
 				x = random.randint(0,9)
 				while (x in ran):
 					x = random.randint(0,9)
-				print(x)
 				ran.append(x)
 				self.img = Image.open("images/"+str(x)+".PNG")
 				self.resized_img = self.img.resize((190,190))
@@ -234,7 +233,7 @@ class Application(Tk):
 		for i in range(len(self.slt)):
 			picture = self.slt[i].image
 			picture.save('temp/'+str(i)+'.jpg')
-		self.mutating(len(self.slt),1.5,"stds_of_all_encoded_vector_per_position.txt")
+		self.mutating(len(self.slt),0.8,"stds_of_all_encoded_vector_per_position.txt")
 		self.all_selected()
 		self.text = ScrolledText(self.selected_frame, wrap=WORD, width=30, height=45,bg='#CAD5CA')
 		self.text.grid(row=2,column=0)
