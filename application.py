@@ -306,6 +306,7 @@ class Application(Tk):
 		vect_select=[]
 		for i in range(num):
 			vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))
+		new_vectors=[]
 		new_vectors=allNewvectors(vect_select,probability,stds)
 		for i, vector in enumerate(new_vectors):
 			decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
