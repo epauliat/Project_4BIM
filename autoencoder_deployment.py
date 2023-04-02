@@ -449,44 +449,6 @@ def encoding_Image_to_Vector(path, encoder):
     encoded_vector = encoded_vector.detach().numpy()
     return encoded_vector
 
-def compute_Std_Per_Position_In_Encoded_Vectors(encoder, file_path):
-    """Function that computes and saves to txt files the mean and std of the values of all_encoded vector from all images of our dataset per position.
-
-        Args:
-            encoder(Encoder): trained encoder
-            file_path (str): path to the images directory
-        Returns:
-            None
-    """
-    print("-- Std Computation --")
-
-    list_encoded_vectors = []
-
-    print("Going through all the files ...")
-
-    files = os.listdir(file_path)
-    for name in files:
-        picture = os.listdir(file_path+'/'+name)
-        for p in picture:
-            path = file_path+'/'+name+"/"+p
-            list_encoded_vectors.append(encoding_Image_to_Vector(path,encoder))
-
-    print("All vectors encoded, computing std per position ... ")
-
-    means = []
-    stds = []
-    for pos in range(len(list_encoded_vectors[0])):
-        all_values = []
-        for vec in list_encoded_vectors:
-            all_values.append(vec[pos])
-
-        means.append(sum(all_values)/len(all_values))
-        stds.append(np.std(all_values,axis=0))
-
-    np.savetxt("means_of_all_encoded_vector_per_position.txt", means)
-    print("Stds saved in means_of_all_encoded_vector_per_position.txt file")
-    np.savetxt("stds_of_all_encoded_vector_per_position.txt", stds)
-    print("Stds saved in stds_of_all_encoded_vector_per_position.txt file")
 
 def decoding_Vector_to_Image(vector, decoder):
     """Function that decodes a vector to an image
@@ -535,8 +497,3 @@ if __name__ == "__main__":
     # comparing_images(my_autoencoder,"faces/1.png")
     # comparing_images(my_autoencoder,"faces/2.png")
     # comparing_images(my_autoencoder,"faces/3.png")
-
-
-    # COMPUTING STD OF ENCODED VECTORS
-
-    # compute_Std_Per_Position_In_Encoded_Vectors(loaded_encoder, 'faces')
