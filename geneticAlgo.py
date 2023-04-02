@@ -320,7 +320,7 @@ def newGeneration(population_):
         for i in range(3):
             newPopulation_.append(array_mutation(population_[i],1).tolist())
         crossovers = crossing_over(newPopulation_)
-        print(len(crossovers))
+        #print(len(crossovers))
 
         for i in range(3):
             newPopulation_.append(crossovers[i].tolist())
