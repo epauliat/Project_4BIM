@@ -80,17 +80,26 @@ class Application(Tk):
 			Returns:
 				None
 		"""
-		global w_frame, lbl, tuto, lancer, e
+		global w_frame, lbl, tuto, lancer, case_nbf, case_nb, case_nb_entry
 		w_frame = Frame(self,bg='#CAD5CA')
 		w_frame.grid(row=1,column=1, columnspan=4)
 		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\n Ce projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nNous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en vert foncé.\n Lorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font,bg='#CAD5CA')
 		lbl.pack(expand="True",fill=tk.X)
 
+		case_nbf = Frame(self,bg='#CAD5CA')
+		case_nbf.grid(row=2,column=1,columnspan=4)
+		case_nb = WrappingLabel(case_nbf, text = "Pour le commissaire : Veuillez entrer le numéro de dossier dans l'encadré suivant: ",font=self.font,bg='#CAD5CA')
+		case_nb.pack(expand="True",fill=tk.X)
+
+		case_nb_entry = Entry(self, width=50, borderwidth=5)
+		case_nb_entry.insert(0,"") #text inside the box
+		case_nb_entry.grid(row=3,column=1,columnspan=4)
+
 		tuto = Button(self, text="Voir le tutoriel", bg='#daebda',command=self.tuto_window)
-		tuto.grid(row=2,column=3)
+		tuto.grid(row=4,column=3)
 
 		lancer = Button(self, text="Lancer l'application", bg='#daebda', command=self.simulation)
-		lancer.grid(row=2,column=2)
+		lancer.grid(row=4,column=2)
 		
 
 	def simulation(self):
@@ -100,12 +109,17 @@ class Application(Tk):
 			Returns:
 				None
 		"""
+		self.case=case_nb_entry.get()
+		case_nbf.destroy()
+		case_nb.destroy()
+		case_nb_entry.destroy()
 		w_frame.destroy()
 		lbl.destroy()
 		tuto.destroy()
 		lancer.destroy()
+		print(self.case)
 		self.date = date.today().strftime("%Y_%m_%d")
-		self.canva = Canvas("report_"+self.date+".pdf")
+		self.canva = Canvas("dossier_"+self.case+"_portrait_robot_"+self.date+".pdf")
 		self.canva.setFont("Times-Roman",12)
 		self.consigne_frame = Frame(self,bg='#CAD5CA',bd=8,relief='raise')
 		self.consigne_frame.grid(row=0,column=1,columnspan=5,sticky="nsew")
@@ -192,14 +206,13 @@ class Application(Tk):
 						self.inc+=1
 						picture = self.slt[0].image
 						picture.save('selected/'+str(self.inc)+'.PNG')
-						messagebox.showinfo("Message de fin","Vous avez trouvé un portrait correspondant à votre agresseur. Nous allons enregistrer ce portrait dans le dossier où vous vous trouvez.\nVous pourrez retrouver toutes les images sélectionnées dans le document (selected), celle de l'agresseur comprise.\n Nous avons de plus créer un rapport daté où vous pourrez observer l'image de l'agresseur.\nMerci pour votre collaboration.")
+						messagebox.showinfo("Message de fin","Vous avez trouvé un portrait correspondant à votre agresseur. Nous allons enregistrer ce portrait dans le dossier où vous vous trouvez.\nVous pourrez retrouver toutes les images sélectionnées dans le document (selected), celle de l'agresseur comprise.\nNous avons de plus créer un rapport daté où vous pourrez observer l'image de l'agresseur.\nMerci pour votre collaboration.")
 						picture_f = self.slt[0].image
-						picture_f.save('agresseur.PNG')
-						pic = Image.open('agresseur.PNG')
-						self.canva.drawString(50,820,"Rapport de l'utilisation de l'intelligence artificielle dans le but de créer un portrait robot de l'agresseur.")
+						picture_f.save("affaire_"+self.case+"_agresseur.PNG")
+						self.canva.drawString(50,820,"Numéro de dossier "+str(self.case))
 						self.canva.drawString(50,800,str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" (UTC+1)"))
-						self.canva.drawString(50,760,"Image de l'agresseur:")
-						self.canva.drawImage("agresseur.PNG",200,540)
+						self.canva.drawString(50,760,"Portrait de l'agresseur:")
+						self.canva.drawImage("affaire_"+self.case+"_agresseur.PNG",200,540)
 						self.canva.drawString(20,20,"FBINSA 2022-2023. BAPT Zoé, BREANT Capucine, PAULIAT Eléa, ROUMANE Mathias, SCHULE Deborah")
 						self.canva.save()
 						self.destroy()
@@ -351,15 +364,15 @@ class Application(Tk):
 		txt_one.pack(expand="True",fill=tk.X)
 		txt_lookf = Frame(self.top_level,bg='#CAD5CA')
 		txt_lookf.grid(row=3,column=0,sticky="nsew")
-		txt_look = WrappingLabel(txt_lookf,text="Une photo correspond à votre agresseur. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton sélection terminée. Une fenêtre apparait alors : comme ce portrait correspond à l’agresseur veuillez répondre oui à la question posée. C’est la fin de l’outil permettant d’émettre un portrait robot de l’agresseur. Une message d’information de fin s’affiche et l’image de l’agresseur peut être retrouver ainsi que toutes les images sélectionnées par la victime durant la création du portrait robot.",font=self.font,bg='#CAD5CA')
+		txt_look = WrappingLabel(txt_lookf,text="Une photo correspond à votre agresseur. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton « sélection terminée ». Une fenêtre apparait alors : comme ce portrait correspond à l’agresseur veuillez répondre oui à la question posée. C’est la fin de l’outil permettant d’émettre un portrait robot de l’agresseur. Une message d’information de fin s’affiche et l’image de l’agresseur peut être retrouver ainsi que toutes les images sélectionnées par la victime durant la création du portrait robot.",font=self.font,bg='#CAD5CA')
 		txt_look.pack(expand="True",fill=tk.X)
 		txt_fewf = Frame(self.top_level,bg='#CAD5CA')
 		txt_fewf.grid(row=4,column=0,sticky="nsew")
-		txt_few = WrappingLabel(txt_fewf,text="Différentes photos ont des caractéristiques se rapprochant du portrait de l’agresseur. Veuillez les sélectionner (avec un maximum de 5) et cliquer sur le bouton sélection terminée. Vous passez au tour suivant et vous pourrez observer toutes les photos sélectionnées depuis le début à gauche de votre écran.",font=self.font,bg='#CAD5CA')
+		txt_few = WrappingLabel(txt_fewf,text="Différentes photos ont des caractéristiques se rapprochant du portrait de l’agresseur. Veuillez les sélectionner (avec un maximum de 5) et cliquer sur le bouton « sélection terminée ». Vous passez au tour suivant et vous pourrez observer toutes les photos sélectionnées depuis le début à gauche de votre écran.",font=self.font,bg='#CAD5CA')
 		txt_few.pack(expand="True",fill=tk.X)
 		txt_endf = Frame(self.top_level,bg='#CAD5CA')
 		txt_endf.grid(row=5,column=0,sticky="nsew")
-		txt_end = WrappingLabel(txt_endf,text="Si au bout de 15 tours vous n’avez pas trouver un portrait correspondant à l’agresseur, l’outil s’arrêtera automatique. Vous trouverez de la même façon les images sélectionnées dans le fichier « rapport_final.pdf »",font=self.font,bg='#CAD5CA')
+		txt_end = WrappingLabel(txt_endf,text="Si au bout de 15 tours vous n’avez pas trouvé un portrait correspondant à l’agresseur, l’outil s’arrêtera automatiquement. Vous trouverez toutes les images sélectionnées durant le processus dans le fichier « selected »",font=self.font,bg='#CAD5CA')
 		txt_end.pack(expand="True",fill=tk.X)
 		txt_backf = Frame(self.top_level,bg='#CAD5CA')
 		txt_backf.grid(row=6,column=0,sticky="nsew")
