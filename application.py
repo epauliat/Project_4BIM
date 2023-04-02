@@ -83,7 +83,7 @@ class Application(Tk):
 		global w_frame, lbl, tuto, lancer, case_nbf, case_nb, case_nb_entry
 		w_frame = Frame(self,bg='#CAD5CA')
 		w_frame.grid(row=1,column=1, columnspan=4)
-		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\n Ce projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nNous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en vert foncé.\n Lorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font,bg='#CAD5CA')
+		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\nCe projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nTout d'abord, le commissaire doit rentrer le numéro de dossier. Puis après avoir appuyé sur le bouton « Lancer l’application », nous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en vert foncé.\nLorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font,bg='#CAD5CA')
 		lbl.pack(expand="True",fill=tk.X)
 
 		case_nbf = Frame(self,bg='#CAD5CA')
@@ -126,7 +126,7 @@ class Application(Tk):
 		self.consigne_lbl.pack(expand="True",fill=tk.X)
 		self.selectedtxt_frame = Frame(self,bd=8,bg='#CAD5CA')
 		self.selectedtxt_frame.grid(row=0,column=0,sticky="nsew")
-		self.selectedtxt_lbl = WrappingLabel(self.selectedtxt_frame, text="Voici les images que vous avez selectionné precedemment",font=self.font,bg='#CAD5CA')
+		self.selectedtxt_lbl = WrappingLabel(self.selectedtxt_frame, text="Voici les images que vous avez selectionné précédemment",font=self.font,bg='#CAD5CA')
 		self.selectedtxt_lbl.pack(expand="True",fill=tk.X)
 		self.selected_frame = Frame(self,bd=8,bg='#CAD5CA')
 		self.selected_frame.grid(row=1,column=0,rowspan=4,sticky="nsew")
@@ -205,7 +205,7 @@ class Application(Tk):
 						self.inc+=1
 						picture = self.slt[0].image
 						picture.save('selected/'+str(self.inc)+'.PNG')
-						messagebox.showinfo("Message de fin","Vous avez trouvé un portrait correspondant à votre agresseur. Nous allons enregistrer ce portrait dans le dossier où vous vous trouvez.\nVous pourrez retrouver toutes les images sélectionnées dans le document (selected), celle de l'agresseur comprise.\nNous avons de plus créer un rapport daté où vous pourrez observer l'image de l'agresseur.\nMerci pour votre collaboration.")
+						messagebox.showinfo("Message de fin","Vous avez trouvé un portrait correspondant à votre agresseur. Nous allons enregistrer ce portrait dans le dossier où vous vous trouvez.\nVous pourrez retrouver toutes les images sélectionnées dans le document « selected », celle de l'agresseur comprise.\nNous avons de plus créer un rapport daté où vous pourrez observer l'image de l'agresseur.\nMerci pour votre collaboration.")
 						picture_f = self.slt[0].image
 						picture_f.save("affaire_"+self.case+"_agresseur.PNG")
 						self.canva.drawString(50,820,"Numéro de dossier "+str(self.case))
@@ -220,7 +220,7 @@ class Application(Tk):
 				else:
 					messagebox.showerror("Nombre d'image selectionné incorrect","Veuillez choisir au minimum 1 portrait")
 			elif len(self.slt)>5:
-				messagebox.showerror("Nombre d'images selectionnés incorrect","Veuillez ne pas choisir plus de 5 portraits")
+				messagebox.showerror("Nombre d'images selectionnées incorrect","Veuillez ne pas choisir plus de 5 portraits")
 				self.slt = []
 				for i in range(len(self.button)):
 				 	self.button[i].configure(bg='#cad5ca')
@@ -228,7 +228,7 @@ class Application(Tk):
 				self.not_found()
 		else:
 			self.all_selected()
-			messagebox.showinfo("Message de fin","Vous n'avez pas trouvé de portrait correspondant à votre agresseur dans le nombre d'itération autorisé. Les photos que vous aviez selectionnées sont enregistrées dans le dossier (selected). Merci pour votre collaboration.")
+			messagebox.showinfo("Message de fin","Vous n'avez pas trouvé de portrait correspondant à votre agresseur dans le nombre d'itération autorisé. Les photos que vous aviez selectionnées sont enregistrées dans le dossier « Lancer l’application ». Merci pour votre collaboration.")
 			self.destroy()
 
 
@@ -363,7 +363,7 @@ class Application(Tk):
 		txt_one.pack(expand="True",fill=tk.X)
 		txt_lookf = Frame(self.top_level,bg='#CAD5CA')
 		txt_lookf.grid(row=3,column=0,sticky="nsew")
-		txt_look = WrappingLabel(txt_lookf,text="Une photo correspond à votre agresseur. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton « sélection terminée ». Une fenêtre apparait alors : comme ce portrait correspond à l’agresseur veuillez répondre oui à la question posée. C’est la fin de l’outil permettant d’émettre un portrait robot de l’agresseur. Une message d’information de fin s’affiche et l’image de l’agresseur peut être retrouver ainsi que toutes les images sélectionnées par la victime durant la création du portrait robot.",font=self.font,bg='#CAD5CA')
+		txt_look = WrappingLabel(txt_lookf,text="Une photo correspond à votre agresseur. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton « sélection terminée ». Une fenêtre apparait alors : comme ce portrait correspond à l’agresseur veuillez répondre oui à la question posée. C’est la fin de l’outil permettant d’émettre un portrait robot de l’agresseur. Une message d’information de fin s’affiche et l’image de l’agresseur peut être retrouvé ainsi que toutes les images sélectionnéees par la victime durant la création du portrait robot.",font=self.font,bg='#CAD5CA')
 		txt_look.pack(expand="True",fill=tk.X)
 		txt_fewf = Frame(self.top_level,bg='#CAD5CA')
 		txt_fewf.grid(row=4,column=0,sticky="nsew")
