@@ -1,0 +1,10 @@
+Link to the database
+
+The database used to train the autoencoder is Flickr-Faces-HQ (FFHQ), a high-quality image dataset of human faces.
+It was originally created as a benchmark for generative adversarial networks (GAN):
+            A Style-Based Generator Architecture for Generative Adversarial Networks,
+            Tero Karras (NVIDIA), Samuli Laine (NVIDIA), Timo Aila (NVIDIA)
+            http://stylegan.xyz/paper
+
+It is available at the following link:
+            https://github.com/NVlabs/ffhq-dataset.git
