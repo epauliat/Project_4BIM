@@ -207,11 +207,11 @@ class Application(Tk):
 						picture.save('selected/'+str(self.inc)+'.PNG')
 						messagebox.showinfo("Message de fin","Vous avez trouvé un portrait correspondant à votre agresseur. Nous allons enregistrer ce portrait dans le dossier où vous vous trouvez.\nVous pourrez retrouver toutes les images sélectionnées dans le document « selected », celle de l'agresseur comprise.\nNous avons de plus créer un rapport daté où vous pourrez observer l'image de l'agresseur.\nMerci pour votre collaboration.")
 						picture_f = self.slt[0].image
-						picture_f.save("affaire_"+self.case+"_agresseur.PNG")
-						self.canva.drawString(50,820,"Numéro de dossier "+str(self.case))
+						picture_f.save("dossier_"+self.case+"_agresseur.PNG")
+						self.canva.drawString(50,820,"Numéro de dossier :"+str(self.case))
 						self.canva.drawString(50,800,str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" (UTC+1)"))
 						self.canva.drawString(50,760,"Portrait de l'agresseur:")
-						self.canva.drawImage("affaire_"+self.case+"_agresseur.PNG",200,540)
+						self.canva.drawImage("dossier_"+self.case+"_agresseur.PNG",200,540)
 						self.canva.drawString(20,20,"FBINSA 2022-2023. BAPT Zoé, BREANT Capucine, PAULIAT Eléa, ROUMANE Mathias, SCHULE Deborah")
 						self.canva.save()
 						self.destroy()
@@ -245,7 +245,7 @@ class Application(Tk):
 		for i in range(len(self.slt)):
 			picture = self.slt[i].image
 			picture.save('temp/'+str(i)+'.jpg')
-		self.mutating(len(self.slt),0.8,"stds_of_all_encoded_vector_per_position.txt")
+		self.mutating(len(self.slt))
 		self.all_selected()
 		self.text = ScrolledText(self.selected_frame, wrap=WORD, width=30, height=45,bg='#CAD5CA')
 		self.text.grid(row=2,column=0)
@@ -297,28 +297,28 @@ class Application(Tk):
 		self.label_tour.pack(expand="True",fill=tk.X)
 
 
-	def mutating(self,num, probability, std_file_path):
+	def mutating(self,num):
 		"""Function that mutates the encoded images and prints them
 			Args:
 				num (int) : number of selected images
 			    probability (float): probability used for mutations
-			    std_file_path (str): path to the std txt file
 			Returns:
 			    None
 		"""
 		loaded_decoder=load_decoder("models/decoder.pt")
 		loaded_encoder=load_encoder("models/encoder.pt")
-		std = []
-		with open(std_file_path) as f:
-			std = f.readlines()
-		stds = std[0].split(' ')
-		for i in range(len(stds)):
-			stds[i]=float(stds[i])
+		# std = []
+		# with open(std_file_path) as f:
+		# 	std = f.readlines()
+		# stds = std[0].split(' ')
+		# for i in range(len(stds)):
+		# 	stds[i]=float(stds[i])
 		vect_select=[]
 		for i in range(num):
 			vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))
-		new_vectors=[]
-		new_vectors=allNewvectors(vect_select,probability,stds)
+		encoded_vectors = [vectors[0] for vectors in vect_select]
+		new_vectors=newGeneration(encoded_vectors)
+		new_vectors = [[vectors] for vectors in new_vectors]
 		for i, vector in enumerate(new_vectors):
 			decoded_pil=decoding_Vector_to_Image(vector,loaded_decoder)
 			decoded_pil.save("images/"+str(i)+".PNG", format="png")
