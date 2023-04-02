@@ -1,3 +1,7 @@
+# All the commented parts of the code were used to train the final model.
+# They were commented to prevent the installation of some packages during the deployment.
+# It was decided to leave them instead of deleting them, so that a reader could understand what was done.
+
 #################
 #    IMPORTS    #
 #################
