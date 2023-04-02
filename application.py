@@ -117,7 +117,6 @@ class Application(Tk):
 		lbl.destroy()
 		tuto.destroy()
 		lancer.destroy()
-		print(self.case)
 		self.date = date.today().strftime("%Y_%m_%d")
 		self.canva = Canvas("dossier_"+self.case+"_portrait_robot_"+self.date+".pdf")
 		self.canva.setFont("Times-Roman",12)
