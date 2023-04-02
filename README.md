@@ -15,7 +15,7 @@ This package also contains tutorials, directory and data that allow our package 
 
 ### Application
 
-The GUI of our project. The victim chooses a selection of images that fit the best the suspect. The window shows faces that are mutated but also faces that are from our DB. You can find in the application a tutorial on how it works.
+The GUI of our project. The victim chooses a selection of images that fits the best the suspect. The window shows faces that are mutated but also faces that are from our DB. You can find in the application a tutorial on how it works.
 
 ### Autoencoder
 
