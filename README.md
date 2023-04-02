@@ -5,13 +5,21 @@
 This application was conceived to help a victim or a witness to identify a guilty (or not) person. This project used a face database (FFHQ, Flickr-Faces-HQ) to offer possible supects to the witness. They can then choose the closer face at each round. The application also offers images that are created from scratch thanks to mutation or crossing over of other choosen images. 
 The objective is to converge to a single robot portrait that should corrrespond to the suspect that the victim/witness saw.
 
-This package contains 3 modules:
+This package contains 4 modules:
 
 - autoencoder.py, that can convert images to vectors of length 64, and can also decode them.
 - geneticAlgo.py, that generates mutated and crossed over vector, that can then be transformed to images.
 - application.py, that is the graphical user interface.
+- main.py, that launches the application.
 
-This package also contains tutorials, directory and data that allow our package to run.
+This package also contains directories and data that allow our package to run:
+- temp: the images selected by the eye-witness/victim at each round, they are temporary and renewed each time they click on "Sélection terminée".
+- selected: the history of all images selected in every round.
+- images : the images displayed in the current round.
+- models: the autoencoder, encoder and decoder created and trained thanks to autoencoder.py.
+- docs: the documentation.
+- means_of_all_encoded_vector_per_position.txt : a text document containing the mean for each of the 64 positions of an encoded vector, it was generated using a 1000 images of the FFHQ database.
+- stds_of_all_encoded_vector_per_position.txt : a text document containing the standard errors for each of the 64 positions of an encoded vector, it was generated using a 1000 images of the FFHQ database.
 
 ### Application
 
