@@ -28,6 +28,8 @@ The model used in this version was trained on 70 000 images (split in training a
 ### GeneticAlgo
 
 Algorithm that computes mutations and crossing-overs of the encoded images.
+Based on a small set (1-5) of received encoded images (arrays of a certain length), the algorithm generates new vectors by performing modifications on the arrays (mutations), and mixing the arrays together (crossing over). The computations pf the algorithm depends on the number of encoded images that are passed as an input.
+This algorithm requires the text files "stds_of_all_encoded_vector_per_position.txt" and "means_of_all_encoded_vector_per_position.txt" which contains standard deviations and means of the encoded images for each positions.
 
 ## Installation
 
