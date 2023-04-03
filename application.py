@@ -26,8 +26,7 @@ from geneticAlgo import *
 #####################
 
 class Application(Tk):
-"""Class that creates the window
-"""
+	"""Class that creates the window"""
 	def __init__(self):
 		"""Function that initializes the template for the window application
 			
@@ -166,7 +165,7 @@ class Application(Tk):
 			self.first=False
 		else:
 			ran = []
-			for i in range(5):
+			for i in range(7):
 				x = random.randint(0,9)
 				while (x in ran):
 					x = random.randint(0,9)
@@ -174,7 +173,7 @@ class Application(Tk):
 				self.img = Image.open("images/"+str(x)+".PNG")
 				self.resized_img = self.img.resize((190,190))
 				self.list_img.append(self.resized_img)
-			for i in range(5,10):
+			for i in range(7,10):
 				x = random.randint(0, nb_faces)
 				img = Image.open("faces/"+str(x)+".png")
 				img.save("images/"+str(i)+".PNG")
@@ -403,39 +402,35 @@ class Application(Tk):
 ##################
 
 class ImButton(tk.Button):
-"""Class that creates a new type of Button which has a Pillow Image and an Image as attribute
-			
-"""
-    def __init__(self, parent, pilimage, image, *args, **kvargs):
-    	"""Type of Button which has a Pillow Image and an Image as attribute
+	"""Class that creates a new type of Button which has a Pillow Image and an Image as attribute"""
+	def __init__(self, parent, pilimage, image, *args, **kvargs):
+		"""Type of Button which has a Pillow Image and an Image as attribute
 
 		    Args:
 		    	None
 		    Returns:
 		    	None
 	    """
-    	self.pilimage = pilimage
-    	self.image = image
-    	super().__init__(parent, *args, image=self.pilimage, **kvargs)
+		self.pilimage = pilimage
+		self.image = image
+		super().__init__(parent, *args, image=self.pilimage, **kvargs)
 
 #######################
 # Class WrappingLabel #
 #######################
 
 class WrappingLabel(tk.Label):
-"""Class that creates a new type of Label that ajusts to the window size
-			
-"""
-    def __init__(self, master=None, **kwargs):
-    	"""Type of Label that ajust to the window size
+	"""Class that creates a new type of Label that ajusts to the window size"""
+	def __init__(self, master=None, **kwargs):
+		"""Type of Label that ajust to the window size
 
 	    	Args:
 	    		None
 	    	Returns:
 	    		None
     	"""
-    	tk.Label.__init__(self, master, **kwargs)
-    	self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
+		tk.Label.__init__(self, master, **kwargs)
+		self.bind('<Configure>', lambda e: self.config(wraplength=self.winfo_width()))
 
 
 ################
