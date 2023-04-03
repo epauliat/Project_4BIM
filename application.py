@@ -59,7 +59,7 @@ class Application(Tk):
 			label="Options",
 			menu=file_menu,
 			underline=0)
-		files = glob.glob('selected/*')
+		files = glob.glob('selected/*.PNG')
 		for f in files:
 			os.remove(f)
 		self.first_window()	
@@ -248,7 +248,7 @@ class Application(Tk):
 			Returns:
 				None
 		"""
-		files = glob.glob('temp/*')
+		files = glob.glob('temp/*.jpg')
 		for f in files:
 			os.remove(f)
 		for i in range(len(self.slt)):
