@@ -87,7 +87,7 @@ class Application(Tk):
 		global w_frame, lbl, tuto, lancer, case_nbf, case_nb, case_nb_entry
 		w_frame = Frame(self,bg='#CAD5CA')
 		w_frame.grid(row=1,column=1, columnspan=4)
-		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\nCe projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nTout d'abord, le commissaire doit rentrer le numéro de dossier. Puis après avoir appuyé sur le bouton « Lancer l’application », nous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en vert foncé.\nLorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton (Sélection terminée).",font=self.font,bg='#CAD5CA')
+		lbl = WrappingLabel(w_frame, text="Bienvenue sur l'application de projet FBI.\nCe projet a pour but d'aider la police scientifique et les victimes d'aggressions à réaliser un portrait robot de l'agresseur grâce a l'intelligence artificielle.\nTout d'abord, le commissaire doit rentrer le numéro de dossier. Puis après avoir appuyé sur le bouton « Lancer l’application », nous allons vous proposez 10 photos, choississez celles (maximum de 5) ressemblant à votre agresseur.\nLes photos sélectionnées seront encadrées en vert foncé.\nLorsque vous avez terminé votre sélection, veuillez cliquer sur le bouton « Sélection terminée ».\nLorsqu'un portrait correspond à celui de l'agresseur, veuillez cliquer sur le bouton « Sélection terminée ». Une boite de dialogue s'ouvrira; veuillez répondre « oui » à la question.\nLe portrait sera alors enregistré sous le format .PNG et rentré dans un rapport .pdf nommé suivant le format : dossier_<numero_de_dossier>_<date_du_jour>.pdf.",font=self.font,bg='#CAD5CA')
 		lbl.pack(expand="True",fill=tk.X)
 
 		case_nbf = Frame(self,bg='#CAD5CA')
@@ -127,7 +127,7 @@ class Application(Tk):
 		self.canva.setFont("Times-Roman",12)
 		self.consigne_frame = Frame(self,bg='#CAD5CA',bd=8,relief='raise')
 		self.consigne_frame.grid(row=0,column=1,columnspan=5,sticky="nsew")
-		self.consigne_lbl = WrappingLabel(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour vert foncé",font=self.font,bg='#CAD5CA')
+		self.consigne_lbl = WrappingLabel(self.consigne_frame, text="Veuillez choisir au moins une photo correspondant le plus à votre agresseur. Les images seclectionnées seront marquées par un contour vert foncé.\nLorsque la sélection est faite, veuillez cliquer sur le bouton « Sélection terminée ».\nLorsqu'un portrait correspond à celui de l'agresseur, veuillez le sélectionner puis cliquer sur le bouton « Sélection terminée ».",font=self.font,bg='#CAD5CA')
 		self.consigne_lbl.pack(expand="True",fill=tk.X)
 		self.selectedtxt_frame = Frame(self,bd=8,bg='#CAD5CA')
 		self.selectedtxt_frame.grid(row=0,column=0,sticky="nsew")
