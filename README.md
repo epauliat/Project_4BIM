@@ -63,7 +63,8 @@ First, make sure to activate the virtual environment:
 
 Finally, you can launch the application:
 
-`cd ~/env1/lib/python3.9/site-packages/fbiprojet_group2_4BIM/main.py`
+`cd ~/env1/lib/python3.9/site-packages/fbiprojet_group2_4BIM/`
+
 `python main.py`
 
 ## Authors
