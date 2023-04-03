@@ -116,7 +116,7 @@ class Encoder(nn.Module):
         encoded = self.BatchNormalization(encoded)
         # print(encoded.size())
         encoded = self.encoder_Flatten(encoded)
-        # print("after flatten",encoded.size())
+        # print(encoded.size())
         encoded = self.encoder_Linear(encoded)
         # print(encoded.size())
 
@@ -158,7 +158,7 @@ class Decoder(nn.Module):
         decoded = self.decoder_Linear(input)
         # print(decoded.size())
         decoded = self.decoder_Unflatten(decoded)
-        # print("after unflatten",decoded.size())
+        # print(decoded.size())
         decoded = self.decoder_ReLu_ConvTranspose2d_2(decoded)
         # print(decoded.size())
         decoded = self.decoder_ReLu_ConvTranspose2d_1(decoded)
@@ -498,10 +498,10 @@ if __name__ == "__main__":
 
     # LOADING ENCODER & DECODER SEPARATELY
 
-    loaded_encoder=load_encoder("models/encoder.pt")
-    loaded_decoder=load_decoder("models/decoder.pt")
+    # loaded_encoder=load_encoder("models/encoder.pt")
+    # loaded_decoder=load_decoder("models/decoder.pt")
 
-    decoding_images(loaded_encoder,loaded_decoder,"faces/1.png")
+    # decoding_images(loaded_encoder,loaded_decoder,"faces/1.png")
     # decoding_images(loaded_encoder,loaded_decoder,"faces/2.png")
     # decoding_images(loaded_encoder,loaded_decoder,"faces/3.png")
 
