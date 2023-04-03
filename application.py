@@ -26,8 +26,11 @@ from geneticAlgo import *
 #####################
 
 class Application(Tk):
+"""Class that creates the windon
+"""
 	def __init__(self):
 		"""Function that initializes the template for the window application
+			
 			Args: 
 				None
 			Returns: 
@@ -64,6 +67,7 @@ class Application(Tk):
 
 	def restart(self):
 		"""Function that allows us to restart our application
+			
 			Args:
 				None
 			Returns:
@@ -75,6 +79,7 @@ class Application(Tk):
 
 	def first_window(self):
 		"""Function that creates the first window that shows up when the user start the program. It presents the project and asks one primilary question
+
 			Args: 
 				None
 			Returns:
@@ -104,6 +109,7 @@ class Application(Tk):
 
 	def simulation(self):
 		"""Function that creates the choices page where the victim will be presented a number of pictures from which they will have to choose the ones that match the best their attacker
+
 			Args:
 				None
 			Returns:
@@ -141,6 +147,7 @@ class Application(Tk):
 
 	def list_image(self):
 		"""Function that gets the list of image that will be presented to the victim at each iteration
+
 			Args:
 				None
 			Returns:
@@ -178,6 +185,7 @@ class Application(Tk):
 
 	def selected(self,btn):
 		"""Function that enables us to highlight the pictures that the user clicked on
+
 			Args:
 				btn (ImButton) : the button the user cliked on
 			Returns:
@@ -192,6 +200,7 @@ class Application(Tk):
 
 	def ia(self):
 		"""Function that is called when we decide that we ended our selection, according to the number of pictures we choose it will either end the process, continue or will ask for another number of images choosen
+
 			Args:
 				None
 			Returns:
@@ -234,6 +243,7 @@ class Application(Tk):
 
 	def not_found(self):
 		"""Function which computes new images from the ones selected (when it is not the agressor)
+
 			Args:
 				None
 			Returns:
@@ -261,6 +271,7 @@ class Application(Tk):
 
 	def all_selected(self):
 		"""Function that appends the list of selected images from the beginning and save them in a directory
+
 			Args:
 				None
 			Returns:
@@ -274,6 +285,7 @@ class Application(Tk):
 
 	def new_images(self):
 		"""Function that loads the images to be shown on the screen by assigning them to the ImButton
+
 			Args:
 				None
 			Returns:
@@ -299,6 +311,7 @@ class Application(Tk):
 
 	def mutating(self,num):
 		"""Function that mutates the encoded images and prints them
+
 			Args:
 				num (int) : number of selected images
 			    probability (float): probability used for mutations
@@ -326,6 +339,7 @@ class Application(Tk):
 
 	def tuto_window(self):
 		"""Function that creates a Toplevel windown to show a tutoriel of our application
+
 			Args:
 				None
 			Returns:
@@ -359,11 +373,11 @@ class Application(Tk):
 		txt_none.pack(expand="True",fill=tk.X)
 		txt_onef = Frame(self.top_level,bg='#CAD5CA')
 		txt_onef.grid(row=2,column=0,sticky="nsew")
-		txt_one = WrappingLabel(txt_onef,text="Seule une photo à des traits se rapprochant de votre agresseur mais ce n’est tout de même pas le portrait de ce dernier. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton sélection terminée. Une fenêtre apparaît alors : comme ce portrait ne correspond pas totalement à l’agresseur veuillez répondre "non" à la question posée. Vous passez au tour suivant.",font=self.font,bg='#CAD5CA')
+		txt_one = WrappingLabel(txt_onef,text="Seule une photo à des traits se rapprochant de votre agresseur mais ce n’est tout de même pas le portrait de ce dernier. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton sélection terminée. Une fenêtre apparaît alors : comme ce portrait ne correspond pas totalement à l’agresseur veuillez répondre « non » à la question posée. Vous passez au tour suivant.",font=self.font,bg='#CAD5CA')
 		txt_one.pack(expand="True",fill=tk.X)
 		txt_lookf = Frame(self.top_level,bg='#CAD5CA')
 		txt_lookf.grid(row=3,column=0,sticky="nsew")
-		txt_look = WrappingLabel(txt_lookf,text="Une photo correspond à votre agresseur. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton « sélection terminée ». Une fenêtre apparait alors : comme ce portrait correspond à l’agresseur veuillez répondre "oui" à la question posée. C’est la fin de l’outil permettant d’émettre un portrait robot de l’agresseur. Une message de fin s’affiche et l’image de l’agresseur peut être retrouvée ainsi que toutes les images sélectionnées par la victime durant la création du portrait robot.",font=self.font,bg='#CAD5CA')
+		txt_look = WrappingLabel(txt_lookf,text="Une photo correspond à votre agresseur. Veuillez alors sélectionner l’image (en cliquant dessus) puis le bouton « sélection terminée ». Une fenêtre apparait alors : comme ce portrait correspond à l’agresseur veuillez répondre « oui » à la question posée. C’est la fin de l’outil permettant d’émettre un portrait robot de l’agresseur. Une message de fin s’affiche et l’image de l’agresseur peut être retrouvée ainsi que toutes les images sélectionnées par la victime durant la création du portrait robot.",font=self.font,bg='#CAD5CA')
 		txt_look.pack(expand="True",fill=tk.X)
 		txt_fewf = Frame(self.top_level,bg='#CAD5CA')
 		txt_fewf.grid(row=4,column=0,sticky="nsew")
@@ -389,8 +403,12 @@ class Application(Tk):
 ##################
 
 class ImButton(tk.Button):
+"""Class that creates a new type of Button which has a Pillow Image and an Image as attribute
+			
+"""
     def __init__(self, parent, pilimage, image, *args, **kvargs):
     	"""Type of Button which has a Pillow Image and an Image as attribute
+
 		    Args:
 		    	None
 		    Returns:
@@ -405,8 +423,12 @@ class ImButton(tk.Button):
 #######################
 
 class WrappingLabel(tk.Label):
+"""Class that creates a new type of Label that ajusts to the window size
+			
+"""
     def __init__(self, master=None, **kwargs):
     	"""Type of Label that ajust to the window size
+
 	    	Args:
 	    		None
 	    	Returns:
