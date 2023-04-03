@@ -41,17 +41,27 @@ This algorithm requires the text files "stds_of_all_encoded_vector_per_position.
 
 ## Installation
 
-`python3 -m venv env1`  
+### Creation of a virtual environment, which can be deleted to uninstall the package and its dependencies  
+
+`python3 -m venv env1` 
+
+### Activation of a virtual environment  
 
 `source env1/bin/activate`
 
+### Importation and installation of the package
+
 `python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps fbiprojet-group2insa`
 
-`pip install fbiprojet_group2insa`
+`pip install fbiprojet_group2insa``
 
-`cp -r env1/lib/<python-vers>/site-packages/fbi-group2 path`
+## Launching
 
-## Lancement
+First, make sure to activate the virtual environment:
+
+`source env1/bin/activate`
+
+Finally, you can launch the application:
 
 `python main.py`
 
