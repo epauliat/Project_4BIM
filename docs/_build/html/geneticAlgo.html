@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geneticAlgo module &mdash; FBI  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="autoencoder_deployment module" href="autoencoder_deployment.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FBI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Project_4BIM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="application.html">application module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="autoencoder_deployment.html">autoencoder_deployment module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">geneticAlgo module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#geneticAlgo.array_mutation"><code class="docutils literal notranslate"><span class="pre">array_mutation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geneticAlgo.crossing_over"><code class="docutils literal notranslate"><span class="pre">crossing_over()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geneticAlgo.generate_array"><code class="docutils literal notranslate"><span class="pre">generate_array()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geneticAlgo.generate_population"><code class="docutils literal notranslate"><span class="pre">generate_population()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geneticAlgo.mutatesAll"><code class="docutils literal notranslate"><span class="pre">mutatesAll()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geneticAlgo.newGeneration"><code class="docutils literal notranslate"><span class="pre">newGeneration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FBI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Project_4BIM</a></li>
+      <li class="breadcrumb-item active">geneticAlgo module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/geneticAlgo.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-geneticAlgo">
+<span id="geneticalgo-module"></span><h1>geneticAlgo module<a class="headerlink" href="#module-geneticAlgo" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="geneticAlgo.array_mutation">
+<span class="sig-prename descclassname"><span class="pre">geneticAlgo.</span></span><span class="sig-name descname"><span class="pre">array_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geneticAlgo.array_mutation" title="Permalink to this definition"></a></dt>
+<dd><p>Function that mutates an array randomly</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p><a href="#id1"><span class="problematic" id="id2">array_</span></a> (numpy.ndarray): The array to be mutated
+P (float): Mutation factor</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: <a href="#id3"><span class="problematic" id="id4">mutatedArray_</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geneticAlgo.crossing_over">
+<span class="sig-prename descclassname"><span class="pre">geneticAlgo.</span></span><span class="sig-name descname"><span class="pre">crossing_over</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arrayList_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geneticAlgo.crossing_over" title="Permalink to this definition"></a></dt>
+<dd><p>Function that performs crossing overs between arrays contained
+in <a href="#id5"><span class="problematic" id="id6">arrayList_</span></a>. The rate of crossing over is determined by the
+probability P.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Args:</dt><dd><p><a href="#id7"><span class="problematic" id="id8">arrayList_</span></a> (numpy.ndarray): List of arrays to modify by crossing overs</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: <a href="#id9"><span class="problematic" id="id10">newArrayList_</span></a></p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geneticAlgo.generate_array">
+<span class="sig-prename descclassname"><span class="pre">geneticAlgo.</span></span><span class="sig-name descname"><span class="pre">generate_array</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geneticAlgo.generate_array" title="Permalink to this definition"></a></dt>
+<dd><p>Function that generates an array of floats based on the stds and the means of the database</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>size (int): the length of the array to be generated</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: <a href="#id11"><span class="problematic" id="id12">array_</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geneticAlgo.generate_population">
+<span class="sig-prename descclassname"><span class="pre">geneticAlgo.</span></span><span class="sig-name descname"><span class="pre">generate_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geneticAlgo.generate_population" title="Permalink to this definition"></a></dt>
+<dd><p>Function that generates a population of N arrays of floats based on the stds and the means of the database</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>N (int): Number of arrays to generate
+size (int): the length of the arrays to be generated</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: <a href="#id13"><span class="problematic" id="id14">population_</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geneticAlgo.mutatesAll">
+<span class="sig-prename descclassname"><span class="pre">geneticAlgo.</span></span><span class="sig-name descname"><span class="pre">mutatesAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vect_select</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geneticAlgo.mutatesAll" title="Permalink to this definition"></a></dt>
+<dd><p>Function that mutates randomly all the vectors selected, returns all in a list</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>vect_select (list): vectors selected by the user in a list
+P (float): Mutation factor</p>
+</dd>
+<dt>return</dt><dd><p>list: <a href="#id15"><span class="problematic" id="id16">mutants_</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="geneticAlgo.newGeneration">
+<span class="sig-prename descclassname"><span class="pre">geneticAlgo.</span></span><span class="sig-name descname"><span class="pre">newGeneration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#geneticAlgo.newGeneration" title="Permalink to this definition"></a></dt>
+<dd><p>Generates a new population (1-5 arrays) by performing mutations and crossing over on a given population</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p><a href="#id17"><span class="problematic" id="id18">population_</span></a> (numpy.ndarray): The array to be mutated 
+select (int): Mutation factor</p>
+</dd>
+<dt>Returns:</dt><dd><p>numpy.ndarray: <a href="#id19"><span class="problematic" id="id20">newPopulation_</span></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="autoencoder_deployment.html" class="btn btn-neutral float-left" title="autoencoder_deployment module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="main.html" class="btn btn-neutral float-right" title="main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, group 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

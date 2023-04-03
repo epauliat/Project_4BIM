@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>autoencoder_deployment module &mdash; FBI  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="geneticAlgo module" href="geneticAlgo.html" />
+    <link rel="prev" title="application module" href="application.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FBI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Project_4BIM</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="application.html">application module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">autoencoder_deployment module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.Autoencoder"><code class="docutils literal notranslate"><span class="pre">Autoencoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#autoencoder_deployment.Autoencoder.forward"><code class="docutils literal notranslate"><span class="pre">Autoencoder.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.Decoder"><code class="docutils literal notranslate"><span class="pre">Decoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#autoencoder_deployment.Decoder.forward"><code class="docutils literal notranslate"><span class="pre">Decoder.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.Encoder"><code class="docutils literal notranslate"><span class="pre">Encoder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#autoencoder_deployment.Encoder.forward"><code class="docutils literal notranslate"><span class="pre">Encoder.forward()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.Image_Conversion_to_tensor"><code class="docutils literal notranslate"><span class="pre">Image_Conversion_to_tensor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.comparing_images"><code class="docutils literal notranslate"><span class="pre">comparing_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.decoding_Vector_to_Image"><code class="docutils literal notranslate"><span class="pre">decoding_Vector_to_Image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.decoding_images"><code class="docutils literal notranslate"><span class="pre">decoding_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.encoding_Image_to_Vector"><code class="docutils literal notranslate"><span class="pre">encoding_Image_to_Vector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.load_autoencoder"><code class="docutils literal notranslate"><span class="pre">load_autoencoder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.load_decoder"><code class="docutils literal notranslate"><span class="pre">load_decoder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#autoencoder_deployment.load_encoder"><code class="docutils literal notranslate"><span class="pre">load_encoder()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="geneticAlgo.html">geneticAlgo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FBI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Project_4BIM</a></li>
+      <li class="breadcrumb-item active">autoencoder_deployment module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/autoencoder_deployment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-autoencoder_deployment">
+<span id="autoencoder-deployment-module"></span><h1>autoencoder_deployment module<a class="headerlink" href="#module-autoencoder_deployment" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="autoencoder_deployment.Autoencoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">Autoencoder</span></span><a class="headerlink" href="#autoencoder_deployment.Autoencoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>This class creates an autoencoder model which inherits from the nn.Module pytorch class, using the previously seen encoder and decoder classes</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>encoder (Encoder): encoder model of the previous Encoder class
+decoder (Decoder): decoder model of the previous Decoder class</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="autoencoder_deployment.Autoencoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.Autoencoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Function that encodes an image, then decodes it</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>input (tensor): image tensor of size 3x64x64</p>
+</dd>
+<dt>Returns:</dt><dd><p>tensor: the image tensor after being decoded of size 3x64x64</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="autoencoder_deployment.Decoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">Decoder</span></span><a class="headerlink" href="#autoencoder_deployment.Decoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>This class creates a decoder model which inherits from the nn.Module pytorch class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autoencoder_deployment.Decoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.Decoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Function that decodes an encoded image tensor</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>input (tensor): encoded image tensor of size 1x64</p>
+</dd>
+<dt>Returns:</dt><dd><p>decoded: the image tensor after being decoded of size 3x64x64</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="autoencoder_deployment.Encoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">Encoder</span></span><a class="headerlink" href="#autoencoder_deployment.Encoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>This class creates an encoder model which inherits from the nn.Module pytorch class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="autoencoder_deployment.Encoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.Encoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Function that encodes an image tensor</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>input (tensor): the input image tensor of size 3x64x64</p>
+</dd>
+<dt>Returns:</dt><dd><p>tensor: encoded image tensor of size 1x64</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.Image_Conversion_to_tensor">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">Image_Conversion_to_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.Image_Conversion_to_tensor" title="Permalink to this definition"></a></dt>
+<dd><p>Function that converts an imported image in PIL format to a Tensor</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): image path from a given directory</p>
+</dd>
+<dt>Returns:</dt><dd><p>tensor: converted image as a tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.comparing_images">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">comparing_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autoencoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.comparing_images" title="Permalink to this definition"></a></dt>
+<dd><p>Function that shows 2 images: the original one and the recomposed one</p>
+<dl class="simple">
+<dt>/!from an Autoencoder model /!</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><p>autoencoder (Autoencoder): the autoencoder used
+path_to_image (str): the path we want to load the image from</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.decoding_Vector_to_Image">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">decoding_Vector_to_Image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.decoding_Vector_to_Image" title="Permalink to this definition"></a></dt>
+<dd><p>Function that decodes a vector to an image</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>vector(Numpy Array): input encoded image as a vector
+decoder (Decoder): decoder used</p>
+</dd>
+<dt>Returns:</dt><dd><p>PIL Image: decoded image in PIL format</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.decoding_images">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">decoding_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.decoding_images" title="Permalink to this definition"></a></dt>
+<dd><p>Function that shows 2 images: the original one and the recomposed one</p>
+<dl class="simple">
+<dt>/!from an encoder and a decoder /!</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><p>encoder (Encoder): the encoder used
+decoder (Decoder): the decoder used
+path_to_image (str): the path we want to load the image from</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.encoding_Image_to_Vector">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">encoding_Image_to_Vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.encoding_Image_to_Vector" title="Permalink to this definition"></a></dt>
+<dd><p>Function that encodes an image to a vector</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): path to an image
+encoder (Encoder): encoder used</p>
+</dd>
+<dt>Returns:</dt><dd><p>Numpy Array: image encoded stored in an intermediate vector</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.load_autoencoder">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">load_autoencoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.load_autoencoder" title="Permalink to this definition"></a></dt>
+<dd><p>Function that loads an Autoencoder model from a given file</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): the path of the file in which the Autoencoder is saved</p>
+</dd>
+<dt>Returns:</dt><dd><p>Autoencoder: the loaded Autoencoder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.load_decoder">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">load_decoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.load_decoder" title="Permalink to this definition"></a></dt>
+<dd><p>Function that loads a Decoder from a given file</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): the path of the file in which the Decoder is saved</p>
+</dd>
+<dt>Returns:</dt><dd><p>Decoder: the loaded Decoder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="autoencoder_deployment.load_encoder">
+<span class="sig-prename descclassname"><span class="pre">autoencoder_deployment.</span></span><span class="sig-name descname"><span class="pre">load_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#autoencoder_deployment.load_encoder" title="Permalink to this definition"></a></dt>
+<dd><p>Function that loads a Encoder from a given file</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>path (str): the path of the file in which the Encoder is saved</p>
+</dd>
+<dt>Returns:</dt><dd><p>Encoder: the loaded Encoder</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="application.html" class="btn btn-neutral float-left" title="application module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="geneticAlgo.html" class="btn btn-neutral float-right" title="geneticAlgo module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, group 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

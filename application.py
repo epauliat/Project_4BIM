@@ -319,12 +319,6 @@ class Application(Tk):
 		"""
 		loaded_decoder=load_decoder("models/decoder.pt")
 		loaded_encoder=load_encoder("models/encoder.pt")
-		# std = []
-		# with open(std_file_path) as f:
-		# 	std = f.readlines()
-		# stds = std[0].split(' ')
-		# for i in range(len(stds)):
-		# 	stds[i]=float(stds[i])
 		vect_select=[]
 		for i in range(num):
 			vect_select.append(encoding_Image_to_Vector("temp/"+str(i)+".jpg",loaded_encoder))

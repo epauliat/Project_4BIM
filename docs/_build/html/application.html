@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>application module &mdash; FBI  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="autoencoder_deployment module" href="autoencoder_deployment.html" />
+    <link rel="prev" title="Project_4BIM" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FBI
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Project_4BIM</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">application module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#application.Application"><code class="docutils literal notranslate"><span class="pre">Application</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.all_selected"><code class="docutils literal notranslate"><span class="pre">Application.all_selected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.first_window"><code class="docutils literal notranslate"><span class="pre">Application.first_window()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.ia"><code class="docutils literal notranslate"><span class="pre">Application.ia()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.list_image"><code class="docutils literal notranslate"><span class="pre">Application.list_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.mutating"><code class="docutils literal notranslate"><span class="pre">Application.mutating()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.new_images"><code class="docutils literal notranslate"><span class="pre">Application.new_images()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.not_found"><code class="docutils literal notranslate"><span class="pre">Application.not_found()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.restart"><code class="docutils literal notranslate"><span class="pre">Application.restart()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.selected"><code class="docutils literal notranslate"><span class="pre">Application.selected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.simulation"><code class="docutils literal notranslate"><span class="pre">Application.simulation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#application.Application.tuto_window"><code class="docutils literal notranslate"><span class="pre">Application.tuto_window()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#application.ImButton"><code class="docutils literal notranslate"><span class="pre">ImButton</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#application.WrappingLabel"><code class="docutils literal notranslate"><span class="pre">WrappingLabel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="autoencoder_deployment.html">autoencoder_deployment module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geneticAlgo.html">geneticAlgo module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FBI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">Project_4BIM</a></li>
+      <li class="breadcrumb-item active">application module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/application.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-application">
+<span id="application-module"></span><h1>application module<a class="headerlink" href="#module-application" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="application.Application">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">application.</span></span><span class="sig-name descname"><span class="pre">Application</span></span><a class="headerlink" href="#application.Application" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Tk</span></code></p>
+<p>Class that creates the window</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.all_selected">
+<span class="sig-name descname"><span class="pre">all_selected</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.all_selected" title="Permalink to this definition"></a></dt>
+<dd><p>Function that appends the list of selected images from the beginning and save them in a directory</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.first_window">
+<span class="sig-name descname"><span class="pre">first_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.first_window" title="Permalink to this definition"></a></dt>
+<dd><p>Function that creates the first window that shows up when the user start the program. It presents the project and asks one primilary question</p>
+<dl class="simple">
+<dt>Args: </dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.ia">
+<span class="sig-name descname"><span class="pre">ia</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.ia" title="Permalink to this definition"></a></dt>
+<dd><p>Function that is called when we decide that we ended our selection, according to the number of pictures we choose it will either end the process, continue or will ask for another number of images choosen</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.list_image">
+<span class="sig-name descname"><span class="pre">list_image</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.list_image" title="Permalink to this definition"></a></dt>
+<dd><p>Function that gets the list of image that will be presented to the victim at each iteration</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>array (self.list_img) : array of images to show</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.mutating">
+<span class="sig-name descname"><span class="pre">mutating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.mutating" title="Permalink to this definition"></a></dt>
+<dd><p>Function that mutates the encoded images and prints them</p>
+<dl>
+<dt>Args:</dt><dd><blockquote>
+<div><p>num (int) : number of selected images</p>
+</div></blockquote>
+<p>probability (float): probability used for mutations</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.new_images">
+<span class="sig-name descname"><span class="pre">new_images</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.new_images" title="Permalink to this definition"></a></dt>
+<dd><p>Function that loads the images to be shown on the screen by assigning them to the ImButton</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.not_found">
+<span class="sig-name descname"><span class="pre">not_found</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.not_found" title="Permalink to this definition"></a></dt>
+<dd><p>Function which computes new images from the ones selected (when it is not the agressor)</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.restart">
+<span class="sig-name descname"><span class="pre">restart</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.restart" title="Permalink to this definition"></a></dt>
+<dd><p>Function that allows us to restart our application</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.selected">
+<span class="sig-name descname"><span class="pre">selected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">btn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.selected" title="Permalink to this definition"></a></dt>
+<dd><p>Function that enables us to highlight the pictures that the user clicked on</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>btn (ImButton) : the button the user cliked on</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.simulation">
+<span class="sig-name descname"><span class="pre">simulation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.simulation" title="Permalink to this definition"></a></dt>
+<dd><p>Function that creates the choices page where the victim will be presented a number of pictures from which they will have to choose the ones that match the best their attacker</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="application.Application.tuto_window">
+<span class="sig-name descname"><span class="pre">tuto_window</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#application.Application.tuto_window" title="Permalink to this definition"></a></dt>
+<dd><p>Function that creates a Toplevel windown to show a tutoriel of our application</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>None</p>
+</dd>
+<dt>Returns:</dt><dd><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="application.ImButton">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">application.</span></span><span class="sig-name descname"><span class="pre">ImButton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pilimage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kvargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.ImButton" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Button</span></code></p>
+<p>Class that creates a new type of Button which has a Pillow Image and an Image as attribute</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="application.WrappingLabel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">application.</span></span><span class="sig-name descname"><span class="pre">WrappingLabel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">master</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#application.WrappingLabel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Label</span></code></p>
+<p>Class that creates a new type of Label that ajusts to the window size</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Project_4BIM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="autoencoder_deployment.html" class="btn btn-neutral float-right" title="autoencoder_deployment module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, group 2.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
