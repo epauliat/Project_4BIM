@@ -73,6 +73,8 @@ def Image_Conversion_to_tensor(path):
 #######################
 
 class Encoder(nn.Module):
+    """This class creates an encoder model which inherits from the nn.Module pytorch class
+    """
     def __init__(self):
         """Encoder constructor for input tensor of size 3x64x64
 
@@ -121,6 +123,8 @@ class Encoder(nn.Module):
         return encoded
 
 class Decoder(nn.Module):
+    """This class creates a decoder model which inherits from the nn.Module pytorch class
+    """    
     def __init__(self):
         """Decoder constructor for input encoded tensor of size 1x64
 
@@ -162,6 +166,13 @@ class Decoder(nn.Module):
         return decoded
 
 class Autoencoder(nn.Module):
+    """This class creates an autoencoder model which inherits from the nn.Module pytorch class, using the previously seen encoder and decoder classes
+       
+       Attributes:
+            encoder (Encoder): encoder model of the previous Encoder class
+            decoder (Decoder): decoder model of the previous Decoder class
+            
+    """
     def __init__(self):
         """Autoencoder constructor that encodes and decodes an input image of size 3x64x64 to a tensor of size 1x64
 
