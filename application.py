@@ -26,7 +26,7 @@ from geneticAlgo import *
 #####################
 
 class Application(Tk):
-"""Class that creates the windon
+"""Class that creates the window
 """
 	def __init__(self):
 		"""Function that initializes the template for the window application
