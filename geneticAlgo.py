@@ -31,6 +31,7 @@ for i in range(len(stds)):
 def generate_array(size):
     """Function that generates an array of floats comprised between
     max and min
+    
     Args:
         size (int): the length of the array to be generated
         max (int): Maximal value
@@ -46,7 +47,7 @@ def generate_array(size):
 
 
 def generate_population(N, size):
-    """Function that generates apopulation of arrays of integers
+    """Function that generates a population of arrays of integers
     comprised between max and min
     Args:
         N (int): Number of arrays to generate
@@ -63,58 +64,59 @@ def generate_population(N, size):
     return np.array(population_)
 
 #################################################
+
 # Cost and selection functions (used for testing)
 
-def cost_function(array_, target):
-    """Function that computes the distance between an array and a specified target array
+# def cost_function(array_, target):
+#     """Function that computes the distance between an array and a specified target array
 
-        Args:
-            array_ (numpy.ndarray): array
-            target (numpy.ndarray): target array
-        Returns:
-            int
-    """
+#         Args:
+#             array_ (numpy.ndarray): array
+#             target (numpy.ndarray): target array
+#         Returns:
+#             int
+#     """
 
-    cost = 0
-    diff = target - array_
-    for i in range(len(array_)):
-        C = np.sqrt(np.mean(diff**2))
-        cost += C
-    return cost
+#     cost = 0
+#     diff = target - array_
+#     for i in range(len(array_)):
+#         C = np.sqrt(np.mean(diff**2))
+#         cost += C
+#     return cost
 
-def cost_population(arrayList_, target):
-    """Function that computes the distance between each array of arrayList_
-    and a specified target array
+# def cost_population(arrayList_, target):
+#     """Function that computes the distance between each array of arrayList_
+#     and a specified target array
 
-        Args:
-            arrayList_ (numpy.ndarray): List of arrays to evaluate
-            target (numpy.ndarray): target array
-        Returns:
-            numpy.ndarray
-    """
-    costs = np.zeros(len(arrayList_))
-    for i in range(len(arrayList_)):
-        costs[i] = cost_function(arrayList_[i], target)
-    return costs
+#         Args:
+#             arrayList_ (numpy.ndarray): List of arrays to evaluate
+#             target (numpy.ndarray): target array
+#         Returns:
+#             numpy.ndarray
+#     """
+#     costs = np.zeros(len(arrayList_))
+#     for i in range(len(arrayList_)):
+#         costs[i] = cost_function(arrayList_[i], target)
+#     return costs
 
 
-def select_Arrays(arrayList, target, p = 0.5):
-    """Function that selects the best arrays based on distance
-    to the target array
+#def select_Arrays(arrayList, target, p = 0.5):
+#     """Function that selects the best arrays based on distance
+#     to the target array
 
-        Args:
-            arrayList (list)
-            target (numpy.ndarray): target array
-            p (int): proportion of arrays to be selected
-        Returns:
-            list
-    """
-    cost = cost_population(arrayList, target)
-    idx = np.argsort(cost)
-    arrayList = np.array(arrayList)
-    orderedArrays = arrayList[idx]
+#         Args:
+#             arrayList (list)
+#             target (numpy.ndarray): target array
+#             p (int): proportion of arrays to be selected
+#         Returns:
+#             list
+#     """
+#     cost = cost_population(arrayList, target)
+#     idx = np.argsort(cost)
+#     arrayList = np.array(arrayList)
+#     orderedArrays = arrayList[idx]
 
-    return orderedArrays[:int(len(arrayList)*p)]
+#     return orderedArrays[:int(len(arrayList)*p)]
 
 
 #########################
@@ -140,40 +142,41 @@ def crossing_over(arrayList_):
 
     return newArrayList_
 
+#First try crossing over functions
 
-def cuts(size, N):
-    """Computes indexes of the cuts to be performed for the crossing over
-    (multi_point_crossover)
+#def cuts(size, N):
+#     """Computes indexes of the cuts to be performed for the crossing over
+#     (multi_point_crossover)
 
-        Args:
-            size (int): Length of the arrays
-            N (int): Number of fragments
-        Returns:
-            numpy.ndarray
-    """
-    div = size/N
-    points = [int(k*div) for k in range(1,N)]
-    return points
+#         Args:
+#             size (int): Length of the arrays
+#             N (int): Number of fragments
+#         Returns:
+#             numpy.ndarray
+#     """
+#     div = size/N
+#     points = [int(k*div) for k in range(1,N)]
+#     return points
 
 
-def multi_point_crossover(arrayList_):
-    """Function that performs crossing overs between arrays contained
-    in arrayList_.
-        Args:
-            arrayList_ (numpy.ndarray): List of arrays to modify by crossing overs
-        Returns:
-            numpy.ndarray
-    """
-    size = len(arrayList_[0])
-    N = len(arrayList_)
-    points = cuts(size, 5)
-    for i in range(len(points)):
-        start = points[i]
-        newArrayList_ = np.copy(arrayList_)
-        for i in range(N):
-            newArrayList_[i][start:] = arrayList_[i+1][start:] if i+1<N else arrayList_[0][start:]
-        arrayList_ = newArrayList_
-    return newArrayList_
+# def multi_point_crossover(arrayList_):
+#     """Function that performs crossing overs between arrays contained
+#     in arrayList_.
+#         Args:
+#             arrayList_ (numpy.ndarray): List of arrays to modify by crossing overs
+#         Returns:
+#             numpy.ndarray
+#     """
+#     size = len(arrayList_[0])
+#     N = len(arrayList_)
+#     points = cuts(size, 5)
+#     for i in range(len(points)):
+#         start = points[i]
+#         newArrayList_ = np.copy(arrayList_)
+#         for i in range(N):
+#             newArrayList_[i][start:] = arrayList_[i+1][start:] if i+1<N else arrayList_[0][start:]
+#         arrayList_ = newArrayList_
+#     return newArrayList_
 
 
 ###################
