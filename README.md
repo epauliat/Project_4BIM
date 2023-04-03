@@ -41,11 +41,12 @@ This algorithm requires the text files "stds_of_all_encoded_vector_per_position.
 
 ## Installation
 
-`pip install fbi`
-
-## Getting Started
-
-...here the tutorial for installation
+`python3 -m venv env1`
+`source env1/bin/activate` 
+`python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps fbiprojet-group2insa`
+`pip install fbi-group2`
+`cp -r env1/lib/<python-vers>/site-packages/fbi-group2 path`
+`python main.py`
 
 ## Authors
 Zoé BAPT, Capucine BREANT, Elea PAULIAT, Mathias ROUMANE, Deborah SCHULE
