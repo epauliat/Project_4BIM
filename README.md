@@ -53,7 +53,7 @@ This algorithm requires the text files "stds_of_all_encoded_vector_per_position.
 
 `python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps fbiprojet-group2insa`
 
-`pip install fbiprojet_group2insa``
+`pip install fbiprojet_group2insa`
 
 ## Launching
 
