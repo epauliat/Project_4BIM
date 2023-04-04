@@ -44,7 +44,7 @@ This algorithm requires the text files "stds_of_all_encoded_vector_per_position.
 
 ### Creation of a virtual environment, which can be deleted to uninstall the package and its dependencies  
 
-`python3 -m venv env1` 
+`python3 -m venv env1` If you already have a directory named env1, you can put any name you want for the environment you want to create (in this case make sure to do the adjustement for the following lines of command)
 
 ### Activation of a virtual environment  
 
@@ -67,6 +67,22 @@ Finally, you can launch the application:
 `cd ~/env1/lib/python3.9/site-packages/fbiprojet_group2_4BIM/`
 
 `python main.py`
+
+## End of usage
+
+Either you know you won't reuse the application. The following lines of command will allow you to delete everything that was installed on the computer to run the application. Keep in mind that if you follow those commands, you will need to start from strach the installation next time you want to use the Application.
+
+`deactivate`
+
+`cd ~`
+
+`rm -r env1` 
+
+Or you know that you might reuse it in some times.
+
+`deactivate`
+
+Next time you will want to reuse it, you can already restart the lines of command from the part "Lauching"
 
 ## Authors
 Zoé BAPT, Capucine BREANT, Elea PAULIAT, Mathias ROUMANE, Deborah SCHULE
