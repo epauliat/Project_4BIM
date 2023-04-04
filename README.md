@@ -13,6 +13,7 @@ This package contains 4 modules:
 - main.py, that launches the application.
 
 This package also contains directories and data that allow our package to run:
+- faces : 1000 images from where the interface can choose to show to the victim at each round
 - temp: the images selected by the eye-witness/victim at each round, they are temporary and renewed each time they click on "Sélection terminée".
 - selected: the history of all images selected in every round.
 - images : the images displayed in the current round.
