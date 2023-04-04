@@ -74,6 +74,14 @@ def Image_Conversion_to_tensor(path):
 
 class Encoder(nn.Module):
     """This class creates an encoder model which inherits from the nn.Module pytorch class
+    
+    Attributes:
+        encoder_Linear (nn.Linear): a linear layer
+        encoder_Flatten (nn.flatten): an flatten layer
+        encoder_Conv2d_ReLU_1 (nn.Sequential): a Cond2D and a Relu layer
+        encoder_Conv2d_ReLU_2 (nn.Sequential): a Cond2D and a Relu layer
+        encoder_MaxPool2d (nn.MaxPool2d): a MaxPool2d layer
+        BatchNormalization (nn.BatchNorm2d): a batch normalization layer
     """
     def __init__(self):
         """Encoder constructor for input tensor of size 3x64x64
@@ -124,6 +132,12 @@ class Encoder(nn.Module):
 
 class Decoder(nn.Module):
     """This class creates a decoder model which inherits from the nn.Module pytorch class
+    
+    Attributes:
+        decoder_Linear (nn.Linear): a linear layer
+        decoder_Unflatten (nn.Unflatten): an unflatten layer
+        decoder_ReLu_ConvTranspose2d_1 (nn.Sequential): a ConvTRasposed and a Sigmoid layer
+        decoder_ReLu_ConvTranspose2d_2 (nn.Sequential): a ConvTRasposed and a Relu layer
     """    
     def __init__(self):
         """Decoder constructor for input encoded tensor of size 1x64
@@ -134,8 +148,7 @@ class Decoder(nn.Module):
                 None
         """
         super().__init__()
-        self.BatchNormalization = nn.BatchNorm2d(8)
-
+        
         self.decoder_Linear = nn.Linear(64,8*60*60)
         self.decoder_Unflatten = nn.Unflatten(1,[8,60,60])
         self.decoder_ReLu_ConvTranspose2d_2 = nn.Sequential(
@@ -419,8 +432,7 @@ def comparing_images(autoencoder, path_to_image):
 
 def decoding_images(encoder, decoder, path_to_image):
     """Function that shows 2 images: the original one and the recomposed one
-
-    /!\ from an encoder and a decoder /!\
+    from an encoder and a decoder
 
         Args:
             encoder (Encoder): the encoder used
