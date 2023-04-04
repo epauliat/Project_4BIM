@@ -82,7 +82,7 @@ Or you know that you might reuse it in some times.
 
 `deactivate`
 
-Next time you will want to reuse it, you can already restart the lines of command from the part "Lauching"
+Next time you want to reuse it, you only need to run the lines of command from the part "Lauching"
 
 ## Authors
 Zoé BAPT, Capucine BREANT, Elea PAULIAT, Mathias ROUMANE, Deborah SCHULE
